@@ -3,17 +3,42 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@3.0.0
   tcc: atomicjar/testcontainers-cloud-orb@0.1.0
+  sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
   jdk17:
     docker:
       - image: cimg/openjdk:17.0
 
+jobs:
+  build-test:
+    executor: jdk17
+    steps:
+      - checkout
+      - run:
+          ./gradlew clean build test
+      - sonarcloud/scan
+
+  deploy:
+    executor: jdk17
+    steps:
+      - checkout
+      - run:
+          ./gradlew clean build -x test
+
 workflows:
   build-and-deploy:
     jobs:
-      - gradle/test:
-          executor: jdk17
+      - build-test:
           pre-steps:
             - tcc/setup
+          context: SonarCloud
+
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
+          
+
 
