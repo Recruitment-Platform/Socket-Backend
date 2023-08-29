@@ -16,10 +16,10 @@ jobs:
       - checkout
       - run:
           name: run build and test
-          command: gradle clean build
+          command: gradle clean build -x test
       - run:
-          name: sonarCloud
-          command: gradle sonarqube
+          name: run test coverage report sonarCloud
+          command: gradle testCoverageSonar
 
   deploy:
     executor: jdk17
@@ -27,7 +27,7 @@ jobs:
       - checkout
       - run:
           name: build x test
-          command: gradle build -x test
+          command: gradle clean build -x test
 
 workflows:
   build-and-deploy:
