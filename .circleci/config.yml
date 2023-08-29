@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@3.0.0
   tcc: atomicjar/testcontainers-cloud-orb@0.1.0
-  sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
   jdk17:
@@ -17,7 +16,6 @@ jobs:
       - checkout
       - run:
           ./gradlew clean build test
-      - sonarcloud/scan
 
   deploy:
     executor: jdk17
