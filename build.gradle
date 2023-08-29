@@ -99,6 +99,19 @@ jacocoTestReport {
 	finalizedBy jacocoTestCoverageVerification //verification은 report 이후에 시작해야함
 }
 
+task testCoverageSonar(type: Test){
+	group 'verification'
+	description 'Runs unit tests with coverage sonarCloud'
+	dependsOn(':test',
+			':jacocoTestReport',
+			':sonar',
+			':jacocoTestCoverageVerification')
+
+	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+	tasks['sonar'].mustRunAfter(tasks['jacocoTestReport'])
+	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['sonar'])
+}
+
 jacocoTestCoverageVerification {
 	dependsOn jacocoTestReport // jacocoTestReport 작업 이후에 실행되어야함
 	violationRules{
