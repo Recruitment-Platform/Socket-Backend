@@ -7,7 +7,7 @@ orbs:
 executors:
   jdk17:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/openjdk:17.0.8
 
 jobs:
   build-test:
@@ -15,14 +15,19 @@ jobs:
     steps:
       - checkout
       - run:
-          ./gradlew clean build test
+          name: run build and test
+          command: gradle clean build
+      - run:
+          name: sonarCloud
+          command: gradle sonarqube
 
   deploy:
     executor: jdk17
     steps:
       - checkout
       - run:
-          ./gradlew clean build -x test
+          name: build x test
+          command: gradle build -x test
 
 workflows:
   build-and-deploy:
@@ -31,6 +36,9 @@ workflows:
           pre-steps:
             - tcc/setup
           context: SonarCloud
+          filters:
+            branches:
+              ignore: main
 
       - deploy:
           filters:
