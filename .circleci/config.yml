@@ -44,7 +44,7 @@ jobs:
       - run:
           name: set short sha
           command: |
-            echo 'exprot SHORT_SHA=${CIRCLE_SHA1:0:7}' >> "$BASH_ENV"
+            echo 'export SHORT_SHA=${CIRCLE_SHA1:0:7}' >> "$BASH_ENV"
             source "$BASH_ENV"
       - aws-cli/setup
       - aws-cli/install
