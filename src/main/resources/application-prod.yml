@@ -1,17 +1,16 @@
 spring:
-  test:
-    database:
-      replace: none
   datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8:///socket
-
+    url: ${datasource.url}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${datasource.username}
+    password: ${datasource.password}
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       format_sql: true
       ddl-auto: validate
     show-sql: true
+    open-in-view: false
 
 logging:
   level:

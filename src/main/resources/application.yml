@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    group:
+      local:
+        - flyway
+        - localdb
+      prod:
+        - flyway
+      test:
+        - flyway
+    active: local
