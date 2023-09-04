@@ -4,6 +4,8 @@ orbs:
   gradle: circleci/gradle@3.0.0
   tcc: atomicjar/testcontainers-cloud-orb@0.1.0
   slack: circleci/slack@4.4.4
+  aws-ecr: circleci/aws-ecr@9.0.0
+  
 
 executors:
   jdk17:
@@ -38,6 +40,13 @@ jobs:
       - slack/notify:
           event: pass
           template: basic_success_1
+      - run:
+          name: make short sha
+          command: SHORT_SHA="${CIRCLE_SHA1:0:7}" echo $SHORT_SHA
+      - aws-ecr/ecr_login:
+          public_registry: true
+      - run:
+          command: gradle jib
 
 workflows:
   build-and-deploy:
@@ -55,6 +64,7 @@ workflows:
       - deploy:
           context:
             - slack-secret
+            - prod-deploy
           filters:
             branches:
               only:
