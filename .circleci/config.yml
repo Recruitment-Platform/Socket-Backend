@@ -43,7 +43,7 @@ jobs:
           template: basic_success_1
       - run:
           name: make short sha
-          command: SHORT_SHA="${CIRCLE_SHA1:0:7}" echo $SHORT_SHA
+          command: SHORT_SHA="${CIRCLE_SHA1:0:7}"; echo $SHORT_SHA
       - aws-cli/setup
       - aws-cli/install
       - aws-ecr/ecr_login:
