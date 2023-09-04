@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   gradle: circleci/gradle@3.0.0
   tcc: atomicjar/testcontainers-cloud-orb@0.1.0
+  slack: circleci/slack@4.4.4
 
 executors:
   jdk17:
@@ -20,6 +21,34 @@ jobs:
       - run:
           name: run test coverage report sonarCloud
           command: gradle testCoverageSonar
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+               "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": "빌드 및 테스트 실패"
+                      }
+                  }
+               ]
+            }
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+               "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": "🎉 빌드 및 테스트 성공"
+                      }
+                  }
+               ]
+            }
 
   deploy:
     executor: jdk17
@@ -28,6 +57,20 @@ jobs:
       - run:
           name: build x test
           command: gradle clean build -x test
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+               "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": "🎉 빌드 성공!"
+                      }
+                  }
+               ]
+            }
 
 workflows:
   build-and-deploy:
@@ -35,12 +78,16 @@ workflows:
       - build-test:
           pre-steps:
             - tcc/setup
-          context: SonarCloud
+          context: 
+            - SonarCloud
+            - slack-secret
           filters:
             branches:
               ignore: main
 
       - deploy:
+          context:
+            - slack-secret
           filters:
             branches:
               only:
