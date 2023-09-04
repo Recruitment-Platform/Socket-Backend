@@ -23,32 +23,10 @@ jobs:
           command: gradle testCoverageSonar
       - slack/notify:
           event: fail
-          custom: |
-            {
-               "blocks": [
-                  {
-                      "type": "section",
-                      "text": {
-                          "type": "mrkdwn",
-                          "text": "빌드 및 테스트 실패"
-                      }
-                  }
-               ]
-            }
+          template: basic_fail_1
       - slack/notify:
           event: pass
-          custom: |
-            {
-               "blocks": [
-                  {
-                      "type": "section",
-                      "text": {
-                          "type": "mrkdwn",
-                          "text": "🎉 빌드 및 테스트 성공"
-                      }
-                  }
-               ]
-            }
+          template: basic_success_1
 
   deploy:
     executor: jdk17
@@ -59,18 +37,7 @@ jobs:
           command: gradle clean build -x test
       - slack/notify:
           event: pass
-          custom: |
-            {
-               "blocks": [
-                  {
-                      "type": "section",
-                      "text": {
-                          "type": "mrkdwn",
-                          "text": "🎉 빌드 성공!"
-                      }
-                  }
-               ]
-            }
+          template: basic_success_1
 
 workflows:
   build-and-deploy:
