@@ -142,20 +142,29 @@ jacocoTestCoverageVerification {
 
 jib {
     from {
-        image = "openjdk:17-alpine"
+        image = "openjdk:17-jdk-slim"
     }
     to {
-        image = "${System.env.AWS_ECR_URL}"
-        tags = ["${System.env.SHORT_SHA}"]
+        image = System.getenv("AWS_ECR_URL")
+        tags = [System.getenv("SHORT_SHA")]
     }
 
 
     container {
         environment = [
-                'SPRING_PROFILES_ACTIVE': "${System.env.SPRING_PROFILES_ACTIVE}",
-                'datasource.url'        : "${System.env.DATASOURCE_URL}",
-                'datasource.username'   : "${System.env.DATASOURCE_USERNAME}",
-                'datasource.password'   : "${System.env.DATASOURCE_PASSWORD}"
+                "SPRING_PROFILES_ACTIVE": System.getenv("SPRING_PROFILES_ACTIVE"),
+                "datasource.url"        : System.getenv("DATASOURCE_URL"),
+                "datasource.username"   : System.getenv("DATASOURCE_USERNAME"),
+                "datasource.password"   : System.getenv("DATASOURCE_PASSWORT")
         ]
     }
+}
+
+task tastvar() {
+    println System.getenv("AWS_ECR_URL")
+    println System.getenv("SHORT_SHA")
+    println System.getenv("SPRING_PROFILES_ACTIVE")
+    println System.getenv("DATASOURCE_URL")
+    println System.getenv("DATASOURCE_USERNAME")
+    println System.getenv("DATASOURCE_PASSWORD")
 }
