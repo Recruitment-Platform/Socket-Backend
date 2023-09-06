@@ -5,6 +5,9 @@ DEFAULT_CONF="/etc/nginx/conf.d/socketing.site.conf"
 
 if [ -n "$RUNNING_APPLICATION" ]; then
   echo "green 배포 시작"
+  IMAGE_ID=$(docker inspect --format '{{.Image}}' green)
+  docker rm green
+  docker rmi $IMAGE_ID
   docker run --name green -d -p 8081:8080 $AWS_ECR_URL:$SHORT_SHA
 
   sleep 10
@@ -25,6 +28,9 @@ if [ -n "$RUNNING_APPLICATION" ]; then
   docker kill --signal=SIGTERM blue
 else
   echo "blue 배포 시작..."
+  IMAGE_ID=$(docker inspect --format '{{.Image}}' green)
+  docker rm blue
+  docker rmi $IMAGE_ID
   docker run --name blue -d -p 8080:8080 $AWS_ECR_URL:$SHORT_SHA
 
   sleep 10
