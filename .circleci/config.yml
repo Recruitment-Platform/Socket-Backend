@@ -49,6 +49,9 @@ jobs:
       - run:
           name: push Image to ECR
           command: gradle jib
+      - add_ssh_keys:
+          fingerprints:
+            - "67:f1:07:2b:15:f1:fc:38:94:bb:60:f4:45:48:2e:be"
       - run:
           name: connect ec2 and deploy
           command: |
