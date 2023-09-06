@@ -55,7 +55,7 @@ jobs:
       - run:
           name: connect ec2 and deploy
           command: |
-          ssh $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
+            ssh $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
 
 workflows:
   build-and-deploy:
