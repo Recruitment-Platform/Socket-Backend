@@ -53,6 +53,10 @@ jobs:
           fingerprints:
             - "67:f1:07:2b:15:f1:fc:38:94:bb:60:f4:45:48:2e:be"
       - run:
+          name: ls
+          command: |
+            ls -al ~/.ssh
+      - run:
           name: connect ec2 and deploy
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
