@@ -53,16 +53,9 @@ jobs:
           fingerprints:
             - "67:f1:07:2b:15:f1:fc:38:94:bb:60:f4:45:48:2e:be"
       - run:
-          name: ls
-          command: |
-            ls -al ~/.ssh
-            cat ~/.ssh/id_rsa_67f1072b15f1fc3894bb60f445482ebe
-            cat ~/.ssh/id_rsa
-            cat ~/.ssh/known_hosts
-      - run:
           name: connect ec2 and deploy
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa_67f1072b15f1fc3894bb60f445482ebe $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
       - slack/notify:
           event: fail
           template: basic_fail_1
