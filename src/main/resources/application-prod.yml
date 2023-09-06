@@ -11,8 +11,13 @@ spring:
       ddl-auto: validate
     show-sql: true
     open-in-view: false
+  lifecycle:
+    timeout-per-shutdown-phase: 60s
 
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+server:
+  shutdown: graceful
