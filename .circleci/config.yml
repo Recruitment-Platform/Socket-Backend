@@ -56,6 +56,7 @@ jobs:
           name: ls
           command: |
             ls -al ~/.ssh
+            cat ~/.ssh/id_rsa_67f1072b15f1fc3894bb60f445482ebe
       - run:
           name: connect ec2 and deploy
           command: |
