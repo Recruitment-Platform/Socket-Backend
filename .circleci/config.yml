@@ -38,24 +38,51 @@ jobs:
       - run:
           name: build x test
           command: gradle clean build -x test
-      - slack/notify:
-          event: pass
-          template: basic_success_1
       - run:
           name: set short sha
           command: |
             echo 'export SHORT_SHA=${CIRCLE_SHA1:0:7}' >> "$BASH_ENV"
             source "$BASH_ENV"
       - aws-cli/setup
-      - aws-cli/install
       - aws-ecr/ecr_login:
           public_registry: true
       - run:
+          name: push Image to ECR
           command: gradle jib
+      - run:
+          name: Allow Access to Production EC2
+          command: |
+            CIRCLE_CI_BUILD_MACHINE_IP=$(curl ipinfo.io/ip)
+
+            aws ec2 authorize-security-group-ingress --region $AWS_REGION \
+                                                   --group-id $AWS_EC2_SG_ID \
+                                                   --protocol tcp \
+                                                   --port 22 \
+                                                   --cidr $CIRCLE_CI_BUILD_MACHINE_IP/24
+      - run:
+          name: Waiting for AWS Security Settings to Take Effect
+          command: sleep 5
       - run:
           name: connect ec2 and deploy
           command: |
-            ssh $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
+            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST SHORT_SHA=$SHORT_SHA AWS_ECR_URL=$AWS_ECR_URL sh > deploy.sh
+      - run:
+          name: Remove Circle CI Instance Ingress Rule
+          command: |
+            CIRCLE_CI_BUILD_MACHINE_IP=$(curl ipinfo.io/ip)
+
+            aws ec2 revoke-security-group-ingress --region $AWS_REGION \
+                                                          --group-id $AWS_EC2_SG_ID \
+                                                          --protocol tcp \
+                                                          --port 22 \
+                                                          --cidr $CIRCLE_CI_BUILD_MACHINE_IP/24
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+
 
 workflows:
   build-and-deploy:
