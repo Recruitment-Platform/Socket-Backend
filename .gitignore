@@ -37,3 +37,4 @@ out/
 .vscode/
 
 application-localdb.yml
+application-local-security.yml
