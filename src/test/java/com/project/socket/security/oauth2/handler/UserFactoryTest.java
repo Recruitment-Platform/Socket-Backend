@@ -48,6 +48,20 @@ class UserFactoryTest {
   }
 
   @Test
+  void email이_없는_github_attribute에_해당하는_유저를_반환한다() {
+    String givenProvider = "github";
+    Map<String, Object> givenAttribute = getEmptyEmailGithubAttribute();
+
+    User user = UserFactory.of(givenProvider, givenAttribute);
+
+    assertAll(
+        () -> assertThat(user.getSocialId()).isEqualTo(SOCIAL_ID),
+        () -> assertThat(user.getEmail()).isNull(),
+        () -> assertThat(user.getSocialProvider()).isEqualTo(GITHUB)
+    );
+  }
+
+  @Test
   void google_attribute에_해당하는_유저를_반환한다() {
     String givenProvider = "google";
     Map<String, Object> givenAttribute = getGoogleAttribute();
@@ -62,7 +76,7 @@ class UserFactoryTest {
   }
 
   @Test
-  void 지원하지않는_provider라면_IllegalArgumentException_예외가_발생한다(){
+  void 지원하지않는_provider라면_IllegalArgumentException_예외가_발생한다() {
     String givenProvider = "naver";
 
     assertThatThrownBy(() -> UserFactory.of(givenProvider, Map.of()))
@@ -80,5 +94,9 @@ class UserFactoryTest {
 
   private Map<String, Object> getGithubAttribute() {
     return Map.of("email", EMAIL, "id", SOCIAL_ID);
+  }
+
+  private Map<String, Object> getEmptyEmailGithubAttribute() {
+    return Map.of("id", SOCIAL_ID);
   }
 }
