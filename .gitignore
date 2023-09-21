@@ -38,3 +38,5 @@ out/
 
 application-localdb.yml
 application-local-security.yml
+
+src/main/resources/static/docs/
