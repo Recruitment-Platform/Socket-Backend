@@ -5,10 +5,11 @@ import com.project.socket.user.model.SocialProvider;
 import com.project.socket.user.model.User;
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserFactory {
+
+  private UserFactory() {
+  }
 
   public static User of(String provider, Map<String, Object> attribute) {
     return switch (provider) {
@@ -18,6 +19,7 @@ public class UserFactory {
       default -> throw new IllegalArgumentException();
     };
   }
+
   private static User googleUser(Map<String, Object> attribute) {
     return User.builder()
                .email(getValue(attribute, "email"))
