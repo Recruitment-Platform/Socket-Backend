@@ -37,7 +37,7 @@ jobs:
       - checkout
       - run:
           name: build x test
-          command: gradle clean build -x test
+          command: gradle clean build -DincludeTags="docs"
       - run:
           name: set short sha
           command: |
