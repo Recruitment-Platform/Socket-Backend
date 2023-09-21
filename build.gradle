@@ -19,6 +19,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -48,6 +49,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
@@ -56,18 +58,56 @@ dependencies {
     testImplementation 'org.testcontainers:mysql'
 }
 
-tasks.named('test') {
-    outputs.dir snippetsDir
-    useJUnitPlatform()
+
+asciidoctor {
+    dependsOn test
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    sources {
+        include("**/index.adoc")
+    }
+    baseDirFollowsSourceFile()
 }
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
 }
 
 test {
-    finalizedBy jacocoTestReport // report는 항상 테스트가 끝난 후에 생성되어야함
+    outputs.dir snippetsDir
+    String includeTagsProperty = System.getProperty("includeTags")
+    boolean includeTagsPropertySet = includeTagsProperty != null
+
+    String excludeTagsProperty = System.getProperty("excludeTags")
+    boolean excludeTagsPropertySet = excludeTagsProperty != null
+
+    if (includeTagsPropertySet && excludeTagsPropertySet) {
+        useJUnitPlatform {
+            includeTags includeTagsProperty
+            excludeTags excludeTagsProperty
+        }
+    } else if (includeTagsPropertySet && !excludeTagsPropertySet) {
+        useJUnitPlatform {
+            includeTags includeTagsProperty
+        }
+    } else if (!includeTagsPropertySet && excludeTagsPropertySet) {
+        useJUnitPlatform {
+            excludeTags excludeTagsProperty
+        }
+    } else {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport // report는 항상 테스트가 끝난 후에 생성되어야함
+    }
 }
 
 sonar {
@@ -155,7 +195,6 @@ jib {
         tags = [System.getenv("SHORT_SHA")]
     }
 
-
     container {
         environment = [
                 "SPRING_PROFILES_ACTIVE": System.getenv("SPRING_PROFILES_ACTIVE"),
@@ -164,12 +203,12 @@ jib {
                 "datasource.password"   : System.getenv("DATASOURCE_PASSWORD"),
                 "CORS_ALLOW_ORIGINS"    : System.getenv("CORS_ALLOW_ORIGINS"),
                 "JWT_KEY"               : System.getenv("JWT_KEY"),
-                "GITHUB_CLIENT_ID" : System.getenv("GITHUB_CLIENT_ID"),
-                "GITHUB_CLIENT_SECRET" : System.getenv("GITHUB_CLIENT_SECRET"),
-                "KAKAO_CLIENT_ID" : System.getenv("KAKAO_CLIENT_ID"),
-                "KAKAO_CLIENT_SECRET" : System.getenv("KAKAO_CLIENT_SECRET"),
-                "GOOGLE_CLIENT_ID" : System.getenv("GOOGLE_CLIENT_ID"),
-                "GOOGLE_CLIENT_SECRET" : System.getenv("GOOGLE_CLIENT_SECRET"),
+                "GITHUB_CLIENT_ID"      : System.getenv("GITHUB_CLIENT_ID"),
+                "GITHUB_CLIENT_SECRET"  : System.getenv("GITHUB_CLIENT_SECRET"),
+                "KAKAO_CLIENT_ID"       : System.getenv("KAKAO_CLIENT_ID"),
+                "KAKAO_CLIENT_SECRET"   : System.getenv("KAKAO_CLIENT_SECRET"),
+                "GOOGLE_CLIENT_ID"      : System.getenv("GOOGLE_CLIENT_ID"),
+                "GOOGLE_CLIENT_SECRET"  : System.getenv("GOOGLE_CLIENT_SECRET"),
         ]
     }
 }
