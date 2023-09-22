@@ -20,7 +20,10 @@ jobs:
       - checkout
       - run:
           name: run build and test
-          command: gradle clean build testCoverageSonar
+          command: gradle clean build test
+      - run:
+          name: sonar
+          command: gradle sonarqube
       - slack/notify:
           event: fail
           template: basic_fail_1
