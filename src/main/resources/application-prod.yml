@@ -7,10 +7,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      format_sql: true
       ddl-auto: validate
     show-sql: true
     open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
   lifecycle:
     timeout-per-shutdown-phase: 60s
 
@@ -21,3 +23,6 @@ logging:
 
 server:
   shutdown: graceful
+
+jwt:
+  secret: ${JWT.KEY}
