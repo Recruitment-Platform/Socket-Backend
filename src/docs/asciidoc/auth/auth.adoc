@@ -1,0 +1,30 @@
+[[kakao-login]]
+=== 카카오 로그인
+
+==== HTTP Request
+include::kakao-login/http-request.adoc[]
+
+==== HTTP Response
+include::kakao-login/http-response.adoc[]
+include::kakao-login/response-fields.adoc[]
+
+[[github-login]]
+=== 깃허브 로그인
+
+==== HTTP Request
+include::github-login/http-request.adoc[]
+
+==== HTTP Response
+include::github-login/http-response.adoc[]
+include::github-login/response-fields.adoc[]
+
+[[google-login]]
+=== 구글 로그인
+
+==== HTTP Request
+include::google-login/http-request.adoc[]
+
+==== HTTP Response
+include::google-login/http-response.adoc[]
+include::google-login/response-fields.adoc[]
+
