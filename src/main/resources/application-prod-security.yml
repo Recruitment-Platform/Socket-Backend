@@ -10,14 +10,14 @@ spring:
             user-name-attribute: id
         registration:
           github:
-            client-id: githubId
-            client-secret: githubSecret
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             scope:
               - read:user
               - user:email
           kakao:
-            client-id: kakaoId
-            client-secret: kakaoSecret
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
             client-authentication-method: client_secret_post
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
@@ -25,35 +25,8 @@ spring:
               - profile_nickname
               - account_email
           google:
-            client-id: googleId
-            client-secret: googleSecret
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - profile
               - email
-  test:
-    database:
-      replace: none
-  datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8:///socket
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
-
-jwt:
-  secret: socket-secret-key-for-test-please
-
-cors:
-  allow-origins: http://localhost:3000

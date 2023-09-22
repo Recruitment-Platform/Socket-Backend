@@ -1,0 +1,2 @@
+cors:
+  allow-origins: ${CORS_ALLOW_ORIGINS}

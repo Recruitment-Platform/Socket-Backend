@@ -1,0 +1,17 @@
+==== Response Fields
+|===
+|Path|Type|Description
+
+|`+profileSetup+`
+|`+boolean+`
+|프로필 설정 여부
+
+|`+accessToken+`
+|`+String+`
+|액세스 토큰
+
+|`+refreshToken+`
+|`+String+`
+|리프레쉬 토큰
+
+|===

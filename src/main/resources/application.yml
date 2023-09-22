@@ -4,8 +4,12 @@ spring:
       local:
         - flyway
         - localdb
+        - local-security
+        - local-cors
       prod:
         - flyway
+        - prod-cors
+        - prod-security
       test:
         - flyway
     active: local

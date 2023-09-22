@@ -20,10 +20,7 @@ jobs:
       - checkout
       - run:
           name: run build and test
-          command: gradle clean build -x test
-      - run:
-          name: run test coverage report sonarCloud
-          command: gradle testCoverageSonar
+          command: gradle clean build testCoverageSonar
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -37,7 +34,7 @@ jobs:
       - checkout
       - run:
           name: build x test
-          command: gradle clean build -x test
+          command: gradle clean build -DincludeTags="docs"
       - run:
           name: set short sha
           command: |
