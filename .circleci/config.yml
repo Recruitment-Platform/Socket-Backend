@@ -23,6 +23,9 @@ jobs:
       - run:
           name: run build and test
           command: gradle clean build
+      - run:
+          name: send report sonarqube
+          command: gradle sonar
       - save_cache:
           paths:
             - ~/.gradle/caches
@@ -37,18 +40,6 @@ jobs:
       - slack/notify:
           event: pass
           template: basic_success_1
-  sonar:
-    executor: linux
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: send report sonarqube
-          command: gradle sonar
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   deploy:
     executor: linux
@@ -85,18 +76,11 @@ workflows:
           context:
             - slack-secret
             - prod-deploy
-
-      - sonar:
-          context:
             - SonarCloud
-            - prod-deploy
-          requires:
-            - build-test
 
       - deploy:
           requires:
             - build-test
-            - sonar
           context:
             - slack-secret
             - prod-deploy
