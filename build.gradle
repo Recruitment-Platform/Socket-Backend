@@ -172,7 +172,7 @@ jib {
         image = "openjdk:17-jdk-slim"
     }
     to {
-        image = System.getenv("AWS_ECR_URL")
+        image = System.getenv("AWS_ECR_URL") ?: ""
         tags = [System.getenv("SHORT_SHA")]
     }
 
