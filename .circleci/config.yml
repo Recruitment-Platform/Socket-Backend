@@ -89,6 +89,7 @@ workflows:
       - sonar:
           context:
             - SonarCloud
+            - prod-deploy
           requires:
             - build-test
 
