@@ -1,26 +1,39 @@
 version: 2.1
 
 orbs:
-  gradle: circleci/gradle@3.0.0
-  tcc: atomicjar/testcontainers-cloud-orb@0.1.0
   slack: circleci/slack@4.4.4
   aws-cli: circleci/aws-cli@4.0
   aws-ecr: circleci/aws-ecr@9.0.0
-  
+
 
 executors:
-  jdk17:
-    docker:
-      - image: cimg/openjdk:17.0.8
+  linux:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
+
 
 jobs:
   build-test:
-    executor: jdk17
+    executor: linux
     steps:
       - checkout
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: run build and test
-          command: gradle clean build testCoverageSonar
+          command: gradle clean build
+      - run:
+          name: send report sonarqube
+          command: gradle sonar
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -29,12 +42,10 @@ jobs:
           template: basic_success_1
 
   deploy:
-    executor: jdk17
+    executor: linux
     steps:
-      - checkout
-      - run:
-          name: build x test
-          command: gradle clean build -DincludeTags="docs"
+      - attach_workspace:
+          at: .
       - run:
           name: set short sha
           command: |
@@ -62,17 +73,14 @@ workflows:
   build-and-deploy:
     jobs:
       - build-test:
-          pre-steps:
-            - tcc/setup
-          context: 
-            - SonarCloud
+          context:
             - slack-secret
             - prod-deploy
-          filters:
-            branches:
-              ignore: main
+            - SonarCloud
 
       - deploy:
+          requires:
+            - build-test
           context:
             - slack-secret
             - prod-deploy

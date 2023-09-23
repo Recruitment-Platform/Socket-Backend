@@ -85,29 +85,9 @@ build {
 
 test {
     outputs.dir snippetsDir
-    String includeTagsProperty = System.getProperty("includeTags")
-    boolean includeTagsPropertySet = includeTagsProperty != null
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report는 항상 테스트가 끝난 후에 생성되어야함
 
-    String excludeTagsProperty = System.getProperty("excludeTags")
-    boolean excludeTagsPropertySet = excludeTagsProperty != null
-
-    if (includeTagsPropertySet && excludeTagsPropertySet) {
-        useJUnitPlatform {
-            includeTags includeTagsProperty
-            excludeTags excludeTagsProperty
-        }
-    } else if (includeTagsPropertySet && !excludeTagsPropertySet) {
-        useJUnitPlatform {
-            includeTags includeTagsProperty
-        }
-    } else if (!includeTagsPropertySet && excludeTagsPropertySet) {
-        useJUnitPlatform {
-            excludeTags excludeTagsProperty
-        }
-    } else {
-        useJUnitPlatform()
-        finalizedBy jacocoTestReport // report는 항상 테스트가 끝난 후에 생성되어야함
-    }
 }
 
 sonar {
