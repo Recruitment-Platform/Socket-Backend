@@ -1,3 +1,5 @@
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Recruitment-Platform_Socket-Backend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Recruitment-Platform_Socket-Backend)
+
 ## 프로젝트 설명
 
 프로젝트, 스터디원을 모집과 지원을 도와주는 서비스 Socket
