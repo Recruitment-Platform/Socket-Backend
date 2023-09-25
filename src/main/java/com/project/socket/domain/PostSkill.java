@@ -27,8 +27,7 @@ public class PostSkill {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id")          //단방향 매핑
-  //@Column(name = "ps_post")              // PostSkill 클래스와 매핑하는 Post 타입 ->pspost
-  private Post psPost;
+  private Post psPost;                    // PostSkill 클래스와 매핑하는 Post 타입 ->pspost
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "skill_id")

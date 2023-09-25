@@ -26,9 +26,8 @@ public class PostRecruit {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "post_id")          //단방향 매핑
-  //@Column(name = "pr_post")              // PostRecruit 클래스와 매핑하는 Post 타입 -> prpost
-  private Post prPost;
+  @JoinColumn(name = "post_id")           //단방향 매핑
+  private Post prPost;                    // PostRecruit 클래스와 매핑하는 Post 타입 -> prpost
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "recruit_id")        //단방향 매핑

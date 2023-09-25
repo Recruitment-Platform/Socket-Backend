@@ -13,8 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,9 +31,8 @@ public class Comment extends BaseTime {
   private Long id;                               //댓글 ID
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "post_id")           // 단방향매핑
-  //@Column(name = "c_post")                 // Comment 클래스와 매핑하는 Post 타입 ->cpost
-  private Post cPost;
+  @JoinColumn(name = "post_id")              // 단방향매핑
+  private Post cPost;                       // Comment 클래스와 매핑하는 Post 타입 ->cpost
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")   //단방향매핑
