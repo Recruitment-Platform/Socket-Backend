@@ -26,6 +26,9 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+application-local-security.yml
+application-localdb.yml
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
