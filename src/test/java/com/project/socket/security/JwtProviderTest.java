@@ -60,4 +60,21 @@ class JwtProviderTest {
 
     jwtProvider.validateToken(accessToken);
   }
+
+  @Test
+  void 토큰의_subject를_반환한다() {
+    String subject = jwtProvider.getSubjectFromToken(createValidToken());
+    assertThat(subject).isNotNull();
+  }
+
+  @Test
+  void 토큰의_role_claim을_반환한다() {
+    String role = jwtProvider.getRoleFromToken(createValidToken());
+    assertThat(role).isNotNull();
+  }
+
+  private String createValidToken() {
+    User user = User.builder().userId(1L).role(Role.ROLE_USER).build();
+    return jwtProvider.createAccessToken(user);
+  }
 }

@@ -1,6 +1,7 @@
 package com.project.socket.common.error;
 
 import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 
 public class ProblemDetailFactory {
@@ -11,7 +12,8 @@ public class ProblemDetailFactory {
   public static ProblemDetail from(ErrorCode errorCode) {
     ProblemDetail problemDetail = ProblemDetail
         .forStatus(errorCode.getStatus());
-    problemDetail.setTitle(errorCode.getMessage());
+    problemDetail.setTitle(HttpStatus.valueOf(errorCode.getStatus()).getReasonPhrase());
+    problemDetail.setDetail(errorCode.getMessage());
     problemDetail.setProperty("code", errorCode.getCode());
     return problemDetail;
   }

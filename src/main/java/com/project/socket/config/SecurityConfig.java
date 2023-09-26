@@ -2,6 +2,9 @@ package com.project.socket.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import com.project.socket.security.filter.JwtFilter;
+import com.project.socket.security.handler.CustomAccessDeniedHandler;
+import com.project.socket.security.handler.CustomAuthenticationEntryPoint;
 import com.project.socket.security.oauth2.handler.OAuth2LoginFailureHandler;
 import com.project.socket.security.oauth2.handler.OAuth2LoginSuccessHandler;
 import java.util.Arrays;
@@ -14,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,6 +29,9 @@ public class SecurityConfig {
 
   private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
   private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+  private final JwtFilter jwtFilter;
+  private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+  private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,8 +47,12 @@ public class SecurityConfig {
         .httpBasic(httpBasic -> httpBasic.disable())
         .formLogin(formLogin -> formLogin.disable())
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/docs/**", "/actuator/**", "/", "/error/**").permitAll()
-            .anyRequest().authenticated());
+            .requestMatchers("/docs/**", "/actuator/**", "/error/**", "/").permitAll()
+            .anyRequest().authenticated())
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+            .authenticationEntryPoint(customAuthenticationEntryPoint)
+            .accessDeniedHandler(customAccessDeniedHandler));
     return http.build();
   }
 
