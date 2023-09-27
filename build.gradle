@@ -100,6 +100,7 @@ sonar {
         property 'sonar.test.inclusions', '**/*Test.java'
         property 'sonar.java.binaries', 'build/classes'
         property 'sonar.exclusions', '**/*Application*.java, **/*Exception*.java, **/resources/*'
+        property 'sonar.test.exclusions', '**/CommonDocController.java, **/ProblemDatailFieldDescription.java'
     }
 }
 

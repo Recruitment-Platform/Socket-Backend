@@ -58,7 +58,7 @@ public class ProblemDetailFactory {
                             error.getField(),
                             String.valueOf(error.getRejectedValue()),
                             error.getDefaultMessage()))
-                        .collect(Collectors.toList());
+                        .toList();
     }
   }
 }
