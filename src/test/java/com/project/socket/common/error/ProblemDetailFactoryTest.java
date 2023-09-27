@@ -19,7 +19,7 @@ class ProblemDetailFactoryTest {
 
     assertAll(
         () -> assertThat(problemDetail.getStatus()).isEqualTo(OAUTH2_LOGIN_FAIL.getStatus()),
-        () -> assertThat(problemDetail.getTitle()).isEqualTo(OAUTH2_LOGIN_FAIL.getMessage()),
+        () -> assertThat(problemDetail.getDetail()).isEqualTo(OAUTH2_LOGIN_FAIL.getMessage()),
         () -> assertThat(problemDetail.getProperties().get("code"))
             .isEqualTo(OAUTH2_LOGIN_FAIL.getCode())
     );
@@ -32,7 +32,7 @@ class ProblemDetailFactoryTest {
 
     assertAll(
         () -> assertThat(problemDetail.getStatus()).isEqualTo(OAUTH2_LOGIN_FAIL.getStatus()),
-        () -> assertThat(problemDetail.getTitle()).isEqualTo(OAUTH2_LOGIN_FAIL.getMessage()),
+        () -> assertThat(problemDetail.getDetail()).isEqualTo(OAUTH2_LOGIN_FAIL.getMessage()),
         () -> assertThat(problemDetail.getProperties().get("code"))
             .isEqualTo(OAUTH2_LOGIN_FAIL.getCode()),
         () -> assertThat(problemDetail.getInstance()).isEqualTo(instanceURI)
