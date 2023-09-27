@@ -6,7 +6,10 @@ public enum ErrorCode {
   OAUTH2_LOGIN_FAIL(401, "A1", "로그인 실패"),
   INVALID_JWT(401, "A2", "유효하지 않은 토큰입니다"),
   HANDLE_ACCESS_DENIED(403, "A3", "권한이 없습니다"),
-  AUTHENTICATION_ENTRY_POINT(401, "A4", "인증이 필요합니다");
+  AUTHENTICATION_ENTRY_POINT(401, "A4", "인증이 필요합니다"),
+
+  // Common
+  INVALID_INPUT_VALUE(400, "C1", "올바르지 않은 입력 값입니다");
 
   private int status;
   private final String code;
