@@ -2,7 +2,6 @@ package com.project.socket.common.error;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
