@@ -1,5 +1,7 @@
-package com.project.socket.domain;
+package com.project.socket.postrecruit;
 
+import com.project.socket.post.Post;
+import com.project.socket.recruit.Recruit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,7 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "postrecruit")
+@Table(name = "post_recruit")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -1,8 +1,6 @@
-package com.project.socket.domain;
+package com.project.socket.post;
 
 import com.project.socket.common.model.BaseTime;
-import com.project.socket.domain.enumtype.PostType;
-import com.project.socket.domain.enumtype.Status;
 import com.project.socket.user.model.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,7 +41,7 @@ public class Post extends BaseTime {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "post_status")
-  private Status postStatus;                     // 게시글 상태(CREATED/MODIFIED/DELETED)
+  private PostStatus postStatus;                     // 게시글 상태(CREATED/MODIFIED/DELETED)
 
 
   @Enumerated(EnumType.STRING)
@@ -54,7 +50,7 @@ public class Post extends BaseTime {
 
 
   @Builder
-  public Post(Long id, User user, String title, String postContent, Status postStatus,
+  public Post(Long id, User user, String title, String postContent, PostStatus postStatus,
       PostType postType) {
     this.id = id;
     this.user = user;

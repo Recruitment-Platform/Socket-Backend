@@ -1,5 +1,7 @@
-package com.project.socket.domain;
+package com.project.socket.postskill;
 
+import com.project.socket.post.Post;
+import com.project.socket.skill.Skill;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,7 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "postskill")
+@Table(name = "post_skill")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

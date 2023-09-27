@@ -1,5 +1,7 @@
-package com.project.socket.domain;
+package com.project.socket.recruitskill;
 
+import com.project.socket.recruit.Recruit;
+import com.project.socket.skill.Skill;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,23 +16,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "recruitskill")
+@Table(name = "recruit_skill")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecruitSkill {
 
-    @Id   @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruit_skill_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "recruit_skill_id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recruit_id")        //단방향 매핑
-    private Recruit rsRecruit;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "recruit_id")        //단방향 매핑
+  private Recruit rsRecruit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id")
-    private Skill rsSkill;                  //단방향 매핑
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "skill_id")
+  private Skill rsSkill;                  //단방향 매핑
 
   @Builder
   public RecruitSkill(Long id, Recruit rsRecruit, Skill rsSkill) {

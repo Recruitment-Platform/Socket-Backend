@@ -1,7 +1,7 @@
-package com.project.socket.domain;
+package com.project.socket.comment;
 
 import com.project.socket.common.model.BaseTime;
-import com.project.socket.domain.enumtype.Status;
+import com.project.socket.post.Post;
 import com.project.socket.user.model.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ public class Comment extends BaseTime {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "comment_status")
-  private Status commentStatus;                       // 댓글 상태
+  private CommentStatus commentStatus;                       // 댓글 상태
 
   @Column(name = "group_num")
   private int groupNum;                        // 댓글 그룹
@@ -54,7 +54,8 @@ public class Comment extends BaseTime {
   private int commentClass;                    // 계층
 
   @Builder
-  public Comment(Long id, Post cPost, User user, String content, Status commentStatus, int groupNum,
+  public Comment(Long id, Post cPost, User user, String content, CommentStatus commentStatus,
+      int groupNum,
       int groupOrder, int commentClass) {
     this.id = id;
     this.cPost = cPost;
