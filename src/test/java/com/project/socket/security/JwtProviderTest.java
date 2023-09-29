@@ -34,21 +34,21 @@ class JwtProviderTest {
   }
 
   @Test
-  void 토큰이_null이면_InvalidJwtExeption_예외가_발생한다() {
+  void 토큰이_null이면_InvalidJwtException_예외가_발생한다() {
     assertThatThrownBy(() -> jwtProvider.validateToken(null))
         .isInstanceOf(InvalidJwtException.class)
         .hasMessage("JWT String argument cannot be null or empty.");
   }
 
   @Test
-  void 토큰이_빈_문자열이면_InvalidJwtExeption_예외가_발생한다() {
+  void 토큰이_빈_문자열이면_InvalidJwtException_예외가_발생한다() {
     assertThatThrownBy(() -> jwtProvider.validateToken(""))
         .isInstanceOf(InvalidJwtException.class)
         .hasMessage("JWT String argument cannot be null or empty.");
   }
 
   @Test
-  void 토큰이_유효하지_않으면_InvalidJwtExeption_예외가_발생한다() {
+  void 토큰이_유효하지_않으면_InvalidJwtException_예외가_발생한다() {
     assertThatThrownBy(() -> jwtProvider.validateToken("invalid.token.value"))
         .isInstanceOf(InvalidJwtException.class);
   }
