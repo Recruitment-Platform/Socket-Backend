@@ -1,59 +1,69 @@
 package com.project.socket.security.oauth2.handler;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static com.project.socket.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.socket.common.error.ErrorCode;
+import com.project.socket.security.CookieUtils;
 import com.project.socket.security.JwtProvider;
+import com.project.socket.security.exception.RedirectBadRequestException;
+import com.project.socket.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.project.socket.user.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.function.Function;
+import java.util.Optional;
+import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-  private final Function<User, User> userRepositoryOAuth2UserHandler;
+  private final UnaryOperator<User> userRepositoryOAuth2UserHandler;
+  private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
   private final JwtProvider jwtProvider;
-  private final ObjectMapper objectMapper;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException {
     OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
+
     User savedUser = userRepositoryOAuth2UserHandler.apply(
         UserFactory.of(
             oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(),
             oAuth2AuthenticationToken.getPrincipal().getAttributes()));
 
-    LoginSuccessResponse loginSuccessResponse = new LoginSuccessResponse(
-        savedUser.isProfileSetup(),
-        jwtProvider.createAccessToken(savedUser),
-        jwtProvider.createRefreshToken(savedUser));
+    String targetUrl = determineTargetUrl(request, savedUser);
 
-    setupResponse(response);
-
-    objectMapper.writeValue(response.getOutputStream(), loginSuccessResponse);
+    clearAuthenticationAttributes(request, response);
+    getRedirectStrategy().sendRedirect(request, response, targetUrl);
   }
 
-  private void setupResponse(HttpServletResponse response) {
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.setContentType(APPLICATION_JSON_VALUE);
-    response.addCookie(createExpiredJSessionCookie());
+  protected String determineTargetUrl(HttpServletRequest request, User user) {
+    Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                                              .map(Cookie::getValue);
+
+    String targetUri = redirectUri.orElseThrow(() ->
+        new RedirectBadRequestException(ErrorCode.REDIRECT_BAD_REQUEST));
+
+    return UriComponentsBuilder.fromUriString(targetUri)
+                               .queryParam("accessToken", jwtProvider.createAccessToken(user))
+                               .queryParam("refreshToken", jwtProvider.createRefreshToken(user))
+                               .queryParam("profileSetup", user.isProfileSetup())
+                               .build().toUriString();
   }
 
-  private Cookie createExpiredJSessionCookie() {
-    Cookie jsessionid = new Cookie("JSESSIONID", null);
-    jsessionid.setMaxAge(0);
-    jsessionid.setPath("/");
-    return jsessionid;
+  protected void clearAuthenticationAttributes(HttpServletRequest request,
+      HttpServletResponse response) {
+    super.clearAuthenticationAttributes(request);
+    httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request,
+        response);
   }
 }

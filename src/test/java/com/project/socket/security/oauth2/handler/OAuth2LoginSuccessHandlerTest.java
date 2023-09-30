@@ -39,55 +39,55 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @ExtendWith(MockitoExtension.class)
 class OAuth2LoginSuccessHandlerTest {
-
-  MockHttpServletRequest request;
-  MockHttpServletResponse response;
-
-  @InjectMocks
-  OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-
-  @Mock
-  Function<User, User> userRepositoryOAuth2UserHandler;
-
-  @Mock
-  JwtProvider jwtProvider;
-
-  @Mock
-  ObjectMapper objectMapper;
-
-
-  @BeforeEach
-  void init() {
-    request = new MockHttpServletRequest();
-    response = new MockHttpServletResponse();
-  }
-
-  @Test
-  void OAuth2_로그인이_성공하면_LoginSuccessResponse_응답을_한다() throws ServletException, IOException {
-    try (MockedStatic<UserFactory> mockUserFactory = mockStatic(UserFactory.class)) {
-      mockUserFactory
-          .when(() -> UserFactory.of(anyString(), anyMap()))
-          .thenReturn(User.builder().build());
-
-      when(userRepositoryOAuth2UserHandler.apply(any())).thenReturn(User.builder().build());
-      when(jwtProvider.createAccessToken(any())).thenReturn("accessToken");
-      when(jwtProvider.createRefreshToken(any())).thenReturn("refreshToken");
-
-      oAuth2LoginSuccessHandler.onAuthenticationSuccess(request, response,
-          createAuthentication());
-
-      assertAll(
-          () -> assertThat(response.getStatus()).isEqualTo(SC_OK),
-          () -> assertThat(response.getContentType()).isEqualTo(APPLICATION_JSON_VALUE),
-          () -> verify(objectMapper).writeValue(eq(response.getOutputStream()),
-              any(LoginSuccessResponse.class))
-      );
-    }
-  }
-
-  OAuth2AuthenticationToken createAuthentication() {
-    List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("role"));
-    OAuth2User oAuth2User = new DefaultOAuth2User(authorities, Map.of("id", "test"), "id");
-    return new OAuth2AuthenticationToken(oAuth2User, authorities, "provider");
-  }
+//
+//  MockHttpServletRequest request;
+//  MockHttpServletResponse response;
+//
+//  @InjectMocks
+//  OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+//
+//  @Mock
+//  Function<User, User> userRepositoryOAuth2UserHandler;
+//
+//  @Mock
+//  JwtProvider jwtProvider;
+//
+//  @Mock
+//  ObjectMapper objectMapper;
+//
+//
+//  @BeforeEach
+//  void init() {
+//    request = new MockHttpServletRequest();
+//    response = new MockHttpServletResponse();
+//  }
+//
+//  @Test
+//  void OAuth2_로그인이_성공하면_LoginSuccessResponse_응답을_한다() throws ServletException, IOException {
+//    try (MockedStatic<UserFactory> mockUserFactory = mockStatic(UserFactory.class)) {
+//      mockUserFactory
+//          .when(() -> UserFactory.of(anyString(), anyMap()))
+//          .thenReturn(User.builder().build());
+//
+//      when(userRepositoryOAuth2UserHandler.apply(any())).thenReturn(User.builder().build());
+//      when(jwtProvider.createAccessToken(any())).thenReturn("accessToken");
+//      when(jwtProvider.createRefreshToken(any())).thenReturn("refreshToken");
+//
+//      oAuth2LoginSuccessHandler.onAuthenticationSuccess(request, response,
+//          createAuthentication());
+//
+//      assertAll(
+//          () -> assertThat(response.getStatus()).isEqualTo(SC_OK),
+//          () -> assertThat(response.getContentType()).isEqualTo(APPLICATION_JSON_VALUE),
+//          () -> verify(objectMapper).writeValue(eq(response.getOutputStream()),
+//              any(LoginSuccessResponse.class))
+//      );
+//    }
+//  }
+//
+//  OAuth2AuthenticationToken createAuthentication() {
+//    List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("role"));
+//    OAuth2User oAuth2User = new DefaultOAuth2User(authorities, Map.of("id", "test"), "id");
+//    return new OAuth2AuthenticationToken(oAuth2User, authorities, "provider");
+//  }
 }

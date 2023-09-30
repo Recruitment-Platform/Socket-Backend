@@ -5,6 +5,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 import com.project.socket.security.filter.JwtFilter;
 import com.project.socket.security.handler.CustomAccessDeniedHandler;
 import com.project.socket.security.handler.CustomAuthenticationEntryPoint;
+import com.project.socket.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.project.socket.security.oauth2.handler.OAuth2LoginFailureHandler;
 import com.project.socket.security.oauth2.handler.OAuth2LoginSuccessHandler;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,6 +34,7 @@ public class SecurityConfig {
   private final JwtFilter jwtFilter;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final CustomAccessDeniedHandler customAccessDeniedHandler;
+  private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,12 +43,14 @@ public class SecurityConfig {
         .sessionManagement(sessionManager -> sessionManager
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .oauth2Login(oauth2Login -> oauth2Login
+            .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
+                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
             .successHandler(oAuth2LoginSuccessHandler)
             .failureHandler(oAuth2LoginFailureHandler))
-        .csrf(csrf -> csrf.disable())
+        .csrf(AbstractHttpConfigurer::disable)
         .cors(withDefaults())
-        .httpBasic(httpBasic -> httpBasic.disable())
-        .formLogin(formLogin -> formLogin.disable())
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/docs/**", "/actuator/**", "/error/**", "/").permitAll()
             .anyRequest().authenticated())
@@ -61,9 +66,6 @@ public class SecurityConfig {
 
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
-    for (String corsOrigin : corsOrigins) {
-      System.out.println(corsOrigin);
-    }
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     corsConfiguration.setAllowedOrigins(corsOrigins);
     corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH"));

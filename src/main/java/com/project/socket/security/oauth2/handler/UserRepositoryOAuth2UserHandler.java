@@ -3,13 +3,13 @@ package com.project.socket.security.oauth2.handler;
 import com.project.socket.user.model.User;
 import com.project.socket.user.repository.UserJpaRepository;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserRepositoryOAuth2UserHandler implements Function<User, User> {
+public class UserRepositoryOAuth2UserHandler implements UnaryOperator<User> {
 
   private final UserJpaRepository userJpaRepository;
 
