@@ -150,13 +150,13 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'BRANCH' // 조건문 등의 분기 수
                 value = 'COVEREDRATIO'
-                minimum = 0.0
+                minimum = 0.80
             }
 
             limit {
                 counter = 'LINE' // 빈 줄을 제외한 실제 코드 라인수
                 value = 'COVEREDRATIO'
-                minimum = 0.0
+                minimum = 0.80
             }
 
             // jacocoTestReport의 작성과 다르게 패키지 + 클래스명을 적어야함
