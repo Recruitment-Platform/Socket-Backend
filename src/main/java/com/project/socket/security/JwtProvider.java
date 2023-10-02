@@ -55,9 +55,7 @@ public class JwtProvider {
   public void validateToken(String token) {
     try {
       getClaimsFromToken(token);
-    } catch (JwtException e) {
-      throw new InvalidJwtException(e.getMessage(), INVALID_JWT);
-    } catch (IllegalArgumentException e) {
+    } catch (JwtException | IllegalArgumentException e) {
       throw new InvalidJwtException(e.getMessage(), INVALID_JWT);
     }
   }
