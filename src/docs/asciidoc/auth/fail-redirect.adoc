@@ -1,0 +1,29 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 302 Found
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Location: redired_url?error=error
+----
+
+|===
+
+|`+redirect_url+`
+|로그인 이후 토큰 결과를 받을 URL
+|ex) http://localhost:3000/login/oauth/token?error=에러입니다.
+
+ ex) http://localhost:3000/?error=에러입니다.
+
+|===
+
+|===
+|Parameter|Description
+
+|`+error+`
+|에러 메세지
+
+|===
