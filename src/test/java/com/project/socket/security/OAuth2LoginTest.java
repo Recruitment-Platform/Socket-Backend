@@ -1,6 +1,5 @@
 package com.project.socket.security;
 
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -12,6 +11,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.project.socket.security.filter.JwtFilter;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -25,13 +26,14 @@ import org.springframework.test.web.servlet.MockMvc;
     type = FilterType.ASSIGNABLE_TYPE, classes = JwtFilter.class))
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
-public class OAuth2LoginTest {
+@DisplayNameGeneration(ReplaceUnderscores.class)
+class OAuth2LoginTest {
 
   @Autowired
   MockMvc mockMvc;
 
   @Test
-  void test() throws Exception {
+  void 로그인_요청을_하면_해당_페이지로_302_리다이렉트한다() throws Exception {
     mockMvc.perform(get("/oauth2/authorization/{provider}", "google")
                .queryParam("redirect_url", "http://localhost:3000/login/callback"))
            .andExpect(status().is3xxRedirection())
@@ -40,8 +42,7 @@ public class OAuth2LoginTest {
                preprocessResponse(prettyPrint()),
                pathParameters(parameterWithName("provider").description("kakao, google, github")),
                queryParameters(
-                   parameterWithName("redirect_url").description("로그인 이후 토큰 결과를 받을 URL")),
-               responseHeaders()
+                   parameterWithName("redirect_url").description("로그인 이후 토큰 결과를 받을 URL"))
            ));
   }
 }
