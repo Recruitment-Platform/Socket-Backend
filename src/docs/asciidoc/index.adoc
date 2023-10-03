@@ -15,3 +15,5 @@ include::overview.adoc[]
 == Auth API
 
 include::auth/auth.adoc[]
+
+include::signup.adoc[]

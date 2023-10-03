@@ -1,0 +1,4 @@
+[[signup]]
+=== 추가정보 입력 회원가입
+
+operation::signup[snippets='http-request,request-headers,request-fields,http-response,response-fields']
