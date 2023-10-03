@@ -7,9 +7,9 @@ public enum ProblemDetailFieldDescription {
   DETAIL("detail", "문제 유형 설명"),
   INSTANCE("instance", "문제가 발생한 URI"),
   CODE("code", "팀에서 정의한 에러코드"),
-  DETAIL_LIST_FIELD("detail[0].field", "문제있는 필드"),
-  DETAIL_LIST_VALUE("detail[0].value", "문제있는 값"),
-  DETAIL_LIST_REASON("detail[0].reason", "문제 원인");
+  DETAIL_LIST_FIELD("detail[].field", "문제있는 필드"),
+  DETAIL_LIST_VALUE("detail[].value", "문제있는 값"),
+  DETAIL_LIST_REASON("detail[].reason", "문제 원인");
 
   private String field;
   private String description;

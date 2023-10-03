@@ -67,13 +67,13 @@ class CommonDocControllerTest {
                        fieldWithPath(STATUS.getField()).description(STATUS.getDescription()),
                        fieldWithPath(DETAIL.getField()).description(DETAIL.getDescription()),
                        fieldWithPath(DETAIL_LIST_FIELD.getField())
-                           .description(DETAIL_LIST_FIELD.getDescription()),
+                           .description(DETAIL_LIST_FIELD.getDescription()).optional(),
                        fieldWithPath(DETAIL_LIST_VALUE.getField())
-                           .description(DETAIL_LIST_VALUE.getDescription()),
+                           .description(DETAIL_LIST_VALUE.getDescription()).optional(),
                        fieldWithPath(DETAIL_LIST_REASON.getField())
-                           .description(DETAIL_LIST_REASON.getDescription()),
+                           .description(DETAIL_LIST_REASON.getDescription()).optional(),
                        fieldWithPath(INSTANCE.getField()).description(INSTANCE.getDescription()),
-                       fieldWithPath(CODE.getField()).description(CODE.getDescription())
+                       fieldWithPath(CODE.getField()).description(CODE.getDescription()).optional()
                    )
                )
            );
