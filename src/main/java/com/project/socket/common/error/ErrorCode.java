@@ -10,7 +10,13 @@ public enum ErrorCode {
   REDIRECT_BAD_REQUEST(400, "A5", "잘못된 요청입니다"),
 
   // Common
-  INVALID_INPUT_VALUE(400, "C1", "올바르지 않은 입력 값입니다");
+  INVALID_INPUT_VALUE(400, "C1", "올바르지 않은 입력 값입니다"),
+  INTERNAL_SERVER_ERROR(500, "C2", "서버 에러"),
+
+  //User
+  USER_NOT_FOUND(404, "U1", "해당 유저가 존재하지 않습니다"),
+  DUPLICATED_NICKNAME(400, "U2", "중복된 닉네임입니다");
+
 
   private int status;
   private final String code;
