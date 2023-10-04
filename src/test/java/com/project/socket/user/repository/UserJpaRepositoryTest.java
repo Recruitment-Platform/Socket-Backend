@@ -51,4 +51,17 @@ class UserJpaRepositoryTest {
 
     assertThat(optionalUser).isEmpty();
   }
+
+  @Test
+  @Sql("existsByNicknameTest.sql")
+  void nickname에_해당하는_유저가_있다면_true를_반환한다() {
+    boolean result = userJpaRepository.existsByNickname("nickname");
+    assertThat(result).isTrue();
+  }
+
+  @Test
+  void nickname에_해당하는_유저가_없다면_false를_반환한다() {
+    boolean result = userJpaRepository.existsByNickname("nickname");
+    assertThat(result).isFalse();
+  }
 }

@@ -58,4 +58,9 @@ public class User extends BaseTime {
     this.socialProvider = socialProvider;
     this.role = role;
   }
+
+  public void updateAdditionalInfo(String nickname, String githubLink) {
+    this.nickname = nickname;
+    this.githubLink = githubLink;
+  }
 }
