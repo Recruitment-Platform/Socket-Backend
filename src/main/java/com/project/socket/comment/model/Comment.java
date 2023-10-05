@@ -1,4 +1,4 @@
-package com.project.socket.comment;
+package com.project.socket.comment.model;
 
 import com.project.socket.common.model.BaseTime;
 import com.project.socket.post.Post;
