@@ -1,0 +1,1 @@
+ALTER TABLE comment MODIFY group_num BIGINT NULL;
