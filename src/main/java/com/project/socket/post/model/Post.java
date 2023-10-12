@@ -1,4 +1,4 @@
-package com.project.socket.post;
+package com.project.socket.post.model;
 
 import com.project.socket.common.model.BaseTime;
 import com.project.socket.user.model.User;
@@ -48,15 +48,32 @@ public class Post extends BaseTime {
   @Column(name = "post_type")
   private PostType postType;                     // 게시글 타입(PROJECT/STUDY)
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "post_meeting")
+  private PostMeeting postMeeting;                     // 온,오프라인 여부(ONLINE/OFFLINE/ON_OFFLINE)
+
 
   @Builder
   public Post(Long id, User user, String title, String postContent, PostStatus postStatus,
-      PostType postType) {
+      PostType postType, PostMeeting postMeeting) {
     this.id = id;
     this.user = user;
     this.title = title;
     this.postContent = postContent;
     this.postStatus = postStatus;
     this.postType = postType;
+    this.postMeeting = postMeeting;
   }
+
+  @Builder
+  public Post(String title, String postContent, PostStatus postStatus, PostType postType,
+      PostMeeting postMeeting) {
+    this.title = title;
+    this.postContent = postContent;
+    this.postStatus = postStatus;
+    this.postType = postType;
+    this.postMeeting = postMeeting;
+  }
+  
+
 }

@@ -1,7 +1,7 @@
 package com.project.socket.comment;
 
 import com.project.socket.common.model.BaseTime;
-import com.project.socket.post.Post;
+import com.project.socket.post.model.Post;
 import com.project.socket.user.model.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

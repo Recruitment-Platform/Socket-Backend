@@ -1,6 +1,6 @@
 package com.project.socket.postrecruit;
 
-import com.project.socket.post.Post;
+import com.project.socket.post.model.Post;
 import com.project.socket.recruit.Recruit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,6 +1,6 @@
 package com.project.socket.postskill;
 
-import com.project.socket.post.Post;
+import com.project.socket.post.model.Post;
 import com.project.socket.skill.Skill;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
