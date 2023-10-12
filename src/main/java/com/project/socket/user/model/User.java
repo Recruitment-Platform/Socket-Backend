@@ -59,9 +59,6 @@ public class User extends BaseTime {
     this.role = role;
   }
 
-  public void userNickname(String nickname) {
-    this.nickname = nickname;
-  }
 
   public void updateAdditionalInfo(String nickname, String githubLink) {
     this.nickname = nickname;
