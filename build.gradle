@@ -101,7 +101,7 @@ sonar {
         property 'sonar.java.binaries', 'build/classes'
         property 'sonar.exclusions', '**/*Application*.java, **/*Exception*.java, **/resources/*,' +
                 '**/CommonDocController.java, **/ProblemDetailFieldDescription.java, **/RestDocsAttributeFactory.java,' +
-                '**/SecurityTestConfig.java'
+                '**/SecurityTestConfig.java, **/annotaion/*'
     }
 }
 
