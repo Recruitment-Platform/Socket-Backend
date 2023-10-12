@@ -18,37 +18,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.socket.common.annotation.CustomWebMvcTestWithRestDocs;
 import com.project.socket.common.error.ErrorCode;
-import com.project.socket.config.SecurityTestConfig;
 import com.project.socket.docs.RestDocsAttributeFactory;
-import com.project.socket.security.filter.JwtFilter;
 import com.project.socket.user.controller.dto.request.SignupRequestDto;
 import com.project.socket.user.exception.DuplicatedNicknameException;
 import com.project.socket.user.exception.UserNotFoundException;
 import com.project.socket.user.model.User;
 import com.project.socket.user.service.usecase.SignupUseCase;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-@WebMvcTest(controllers = SignupController.class,
-    excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = JwtFilter.class))
-@AutoConfigureRestDocs
-@Import(SecurityTestConfig.class)
-@DisplayNameGeneration(ReplaceUnderscores.class)
+@CustomWebMvcTestWithRestDocs(SignupController.class)
 class SignupControllerTest {
 
   @Autowired

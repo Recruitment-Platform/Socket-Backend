@@ -53,7 +53,6 @@ public class SecurityConfig {
         .httpBasic(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .requestMatchers("/docs/**", "/actuator/**", "/error/**", "/").permitAll()
             .requestMatchers("/signup").authenticated()
             .anyRequest().authenticated())

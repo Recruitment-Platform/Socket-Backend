@@ -15,8 +15,11 @@ public enum ErrorCode {
 
   //User
   USER_NOT_FOUND(404, "U1", "해당 유저가 존재하지 않습니다"),
-  DUPLICATED_NICKNAME(400, "U2", "중복된 닉네임입니다");
+  DUPLICATED_NICKNAME(400, "U2", "중복된 닉네임입니다"),
 
+  // post
+  POST_NOT_FOUND(404, "P1", "해당 포스트가 존재하지 않습니다");
+  // comment
 
   private int status;
   private final String code;

@@ -17,3 +17,8 @@ include::overview.adoc[]
 include::auth/auth.adoc[]
 
 include::signup.adoc[]
+
+[[COMMENT-API]]
+== Comment API
+
+include::comment.adoc[]

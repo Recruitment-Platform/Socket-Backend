@@ -1,4 +1,4 @@
-package com.project.socket.post;
+package com.project.socket.post.model;
 
 import com.project.socket.common.model.BaseTime;
 import com.project.socket.user.model.User;

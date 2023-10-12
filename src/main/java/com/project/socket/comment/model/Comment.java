@@ -1,7 +1,7 @@
-package com.project.socket.comment;
+package com.project.socket.comment.model;
 
 import com.project.socket.common.model.BaseTime;
-import com.project.socket.post.Post;
+import com.project.socket.post.model.Post;
 import com.project.socket.user.model.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +45,7 @@ public class Comment extends BaseTime {
   private CommentStatus commentStatus;                       // 댓글 상태
 
   @Column(name = "group_num")
-  private int groupNum;                        // 댓글 그룹
+  private Long groupNum;                        // 댓글 그룹
 
   @Column(name = "group_order")
   private int groupOrder;                      // 댓글과 대댓글 순서
@@ -53,10 +53,22 @@ public class Comment extends BaseTime {
   @Column(name = "comment_class")
   private int commentClass;                    // 계층
 
+  public void setupGroupNum(Long commentId) {
+    this.groupNum = commentId;
+  }
+
+  public static Comment createNewComment(Post postToAddComment, User writer, String content) {
+    return Comment.builder()
+                  .user(writer).cPost(postToAddComment)
+                  .content(content)
+                  .commentStatus(CommentStatus.CREATED)
+                  .commentClass(0)
+                  .build();
+  }
+
   @Builder
   public Comment(Long id, Post cPost, User user, String content, CommentStatus commentStatus,
-      int groupNum,
-      int groupOrder, int commentClass) {
+      Long groupNum, int groupOrder, int commentClass) {
     this.id = id;
     this.cPost = cPost;
     this.user = user;
