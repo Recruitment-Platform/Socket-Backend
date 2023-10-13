@@ -31,12 +31,14 @@ class CommentJpaRepositoryTest {
     Optional<User> writer = userJpaRepository.findById(1L);
     Optional<Post> post = postJpaRepository.findById(1L);
     Comment comment = Comment.builder()
-                             .user(writer.get()).cPost(post.get())
+                             .writer(writer.get()).cPost(post.get())
                              .content("sdf")
                              .build();
 
     Comment savedComment = commentJpaRepository.save(comment);
-
-    assertThat(savedComment.getId()).isNotNull();
+    assertThat(savedComment).satisfies(c -> {
+      assertThat(c.getId()).isNotNull();
+      assertThat(c.getParentComment()).isNull();
+    });
   }
 }

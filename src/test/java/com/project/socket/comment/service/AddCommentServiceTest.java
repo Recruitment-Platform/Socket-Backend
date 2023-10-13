@@ -84,7 +84,7 @@ class AddCommentServiceTest {
     Post postToSaveComment = Post.builder().id(1L).build();
     Comment comment = Comment.builder()
                              .id(1L)
-                             .content(command.content()).user(writer).cPost(postToSaveComment)
+                             .content(command.content()).writer(writer).cPost(postToSaveComment)
                              .build();
 
     when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(writer));
