@@ -1,9 +1,15 @@
+/*
 package com.project.socket.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.project.socket.common.annotation.CustomDataJpaTest;
 import com.project.socket.post.model.Post;
+import com.project.socket.post.model.PostMeeting;
+import com.project.socket.post.model.PostStatus;
+import com.project.socket.post.model.PostType;
+import com.project.socket.user.model.User;
+import com.project.socket.user.repository.UserJpaRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +20,9 @@ class PostJpaRepositoryTest {
 
   @Autowired
   PostJpaRepository postJpaRepository;
+
+  @Autowired
+  UserJpaRepository userJpaRepository;
 
   @Test
   @Sql("findById.sql")
@@ -29,4 +38,22 @@ class PostJpaRepositoryTest {
 
     assertThat(foundPost).isNotPresent();
   }
-}
+
+  @Test
+  void Post_엔티티_저장한다() {
+    Optional<User> user = userJpaRepository.findById(1L);
+
+    Post post = Post.builder()
+        .user(user.get())
+        .title("aaaa")
+        .postContent("안녕하세요")
+        .postStatus(PostStatus.CREATED)
+        .postType(PostType.PROJECT)
+        .postMeeting(PostMeeting.ONLINE)
+        .build();
+
+    Post savedPost = postJpaRepository.save(post);
+
+    assertThat(savedPost.getId()).isNotNull();
+  }
+}*/

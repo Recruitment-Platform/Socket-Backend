@@ -53,6 +53,19 @@ public class Post extends BaseTime {
   private PostMeeting postMeeting;                     // 온,오프라인 여부(ONLINE/OFFLINE/ON_OFFLINE)
 
 
+  public static Post createNewPost(User user, String title, String content, PostType postType,
+      PostMeeting postMeeting) {
+    return Post.builder()
+        .user(user)
+        .title(title)
+        .postContent(content)
+        .postStatus(PostStatus.CREATED)
+        .postType(postType)
+        .postMeeting(postMeeting)
+        .build();
+  }
+
+
   @Builder
   public Post(Long id, User user, String title, String postContent, PostStatus postStatus,
       PostType postType, PostMeeting postMeeting) {
@@ -65,15 +78,5 @@ public class Post extends BaseTime {
     this.postMeeting = postMeeting;
   }
 
-  @Builder
-  public Post(String title, String postContent, PostStatus postStatus, PostType postType,
-      PostMeeting postMeeting) {
-    this.title = title;
-    this.postContent = postContent;
-    this.postStatus = postStatus;
-    this.postType = postType;
-    this.postMeeting = postMeeting;
-  }
-  
 
 }
