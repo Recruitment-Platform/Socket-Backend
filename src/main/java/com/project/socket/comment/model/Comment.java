@@ -36,46 +36,34 @@ public class Comment extends BaseTime {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")   //단방향매핑
-  private User user;
+  private User writer;
 
   private String content;                       // 댓글 내용
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "parent_id")
+  private Comment parentComment;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "comment_status")
   private CommentStatus commentStatus;                       // 댓글 상태
 
-  @Column(name = "group_num")
-  private Long groupNum;                        // 댓글 그룹
-
-  @Column(name = "group_order")
-  private int groupOrder;                      // 댓글과 대댓글 순서
-
-  @Column(name = "comment_class")
-  private int commentClass;                    // 계층
-
-  public void setupGroupNum(Long commentId) {
-    this.groupNum = commentId;
-  }
-
   public static Comment createNewComment(Post postToAddComment, User writer, String content) {
     return Comment.builder()
-                  .user(writer).cPost(postToAddComment)
+                  .writer(writer).cPost(postToAddComment)
                   .content(content)
                   .commentStatus(CommentStatus.CREATED)
-                  .commentClass(0)
                   .build();
   }
 
   @Builder
-  public Comment(Long id, Post cPost, User user, String content, CommentStatus commentStatus,
-      Long groupNum, int groupOrder, int commentClass) {
+  public Comment(Long id, Post cPost, User writer, String content, Comment parentComment,
+      CommentStatus commentStatus) {
     this.id = id;
     this.cPost = cPost;
-    this.user = user;
+    this.writer = writer;
     this.content = content;
+    this.parentComment = parentComment;
     this.commentStatus = commentStatus;
-    this.groupNum = groupNum;
-    this.groupOrder = groupOrder;
-    this.commentClass = commentClass;
   }
 }
