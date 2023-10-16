@@ -1,6 +1,7 @@
 package com.project.socket.common.annotation;
 
 import com.project.socket.config.JpaConfig;
+import com.project.socket.config.QuerydslConfig;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(JpaConfig.class)
+@Import({JpaConfig.class, QuerydslConfig.class})
 @DataJpaTest
 @ActiveProfiles("test")
 @DisplayNameGeneration(ReplaceUnderscores.class)
