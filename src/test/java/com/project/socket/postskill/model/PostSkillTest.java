@@ -1,7 +1,8 @@
-package com.project.socket.postskill;
+package com.project.socket.postskill.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.project.socket.postskill.model.PostSkill;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

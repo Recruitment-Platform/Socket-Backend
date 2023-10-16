@@ -1,7 +1,7 @@
-package com.project.socket.recruitskill;
+package com.project.socket.recruitskill.model;
 
-import com.project.socket.recruit.Recruit;
-import com.project.socket.skill.Skill;
+import com.project.socket.recruit.model.Recruit;
+import com.project.socket.skill.model.Skill;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

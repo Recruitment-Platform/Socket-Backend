@@ -1,7 +1,7 @@
-package com.project.socket.postskill;
+package com.project.socket.postskill.model;
 
 import com.project.socket.post.model.Post;
-import com.project.socket.skill.Skill;
+import com.project.socket.skill.model.Skill;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
