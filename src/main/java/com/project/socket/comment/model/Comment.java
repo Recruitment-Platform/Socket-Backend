@@ -56,6 +56,10 @@ public class Comment extends BaseTime {
                   .build();
   }
 
+  public void setupParentComment(Comment parentComment) {
+    this.parentComment = parentComment;
+  }
+
   @Builder
   public Comment(Long id, Post cPost, User writer, String content, Comment parentComment,
       CommentStatus commentStatus) {
