@@ -41,4 +41,19 @@ class CommentJpaRepositoryTest {
       assertThat(c.getParentComment()).isNull();
     });
   }
+
+  @Test
+  @Sql("findById.sql")
+  void id에_해당하는_댓글이_있다면_댓글이_담긴_Optional_객체를_반환한다() {
+    Optional<Comment> foundComment = commentJpaRepository.findById(1L);
+
+    assertThat(foundComment).isPresent();
+  }
+
+  @Test
+  void id에_해당하는_댓글이_없다면_빈_Optional_객체를_반환한다() {
+    Optional<Comment> foundComment = commentJpaRepository.findById(1L);
+
+    assertThat(foundComment).isNotPresent();
+  }
 }
