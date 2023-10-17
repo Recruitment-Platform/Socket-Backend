@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostService {
 
-  private final PostJpaRepository postJpaRepository;
-  private final UserJpaRepository userJpaRepository;
+    private final PostJpaRepository postJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
 
-  @Transactional
-  public Long save(PostSaveRequestDto requestDto) {
-    return postJpaRepository.save(requestDto.toEntity()).getId();
-  }
+    @Transactional
+    public Long save(PostSaveRequestDto requestDto) {
+        return postJpaRepository.save(requestDto.toEntity()).getId();
+    }
 }
