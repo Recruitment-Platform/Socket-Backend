@@ -1,5 +1,6 @@
 package com.project.socket.post.repository;
 
+
 import com.project.socket.common.annotation.CustomDataJpaTest;
 import com.project.socket.post.model.Post;
 import com.project.socket.post.model.PostMeeting;
@@ -58,3 +59,4 @@ class PostJpaRepositoryTest {
         assertThat(savedPost.getId()).isNotNull();
     }
 }
+

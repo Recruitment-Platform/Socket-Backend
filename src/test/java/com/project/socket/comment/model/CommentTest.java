@@ -27,10 +27,9 @@ class CommentTest {
     Comment newComment = Comment.createNewComment(post, user, CONTENT);
 
     assertThat(newComment).satisfies(comment -> {
-          assertThat(comment.getCommentClass()).isZero();
           assertThat(comment.getContent()).isEqualTo(CONTENT);
           assertThat(comment.getCommentStatus()).isEqualTo(CommentStatus.CREATED);
-          assertThat(comment.getGroupOrder()).isZero();
+          assertThat(comment.getParentComment()).isNull();
         }
     );
   }

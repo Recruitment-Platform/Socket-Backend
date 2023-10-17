@@ -32,7 +32,6 @@ public class AddCommentService implements AddCommentUseCase {
         postToAddComment, writer, addCommentCommand.content());
 
     Comment savedComment = saveComment(commentToSave);
-    savedComment.setupGroupNum(savedComment.getId());
     return savedComment;
   }
 
