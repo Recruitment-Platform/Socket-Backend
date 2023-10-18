@@ -60,6 +60,16 @@ public class Comment extends BaseTime {
     this.parentComment = parentComment;
   }
 
+  public boolean validateRelation(Long writerId, Long postId) {
+    return this.writer.getUserId().equals(writerId) && this.cPost.getId().equals(postId);
+
+  }
+
+  public void modifyContent(String content) {
+    this.content = content;
+    this.commentStatus = CommentStatus.MODIFIED;
+  }
+
   @Builder
   public Comment(Long id, Post cPost, User writer, String content, Comment parentComment,
       CommentStatus commentStatus) {
