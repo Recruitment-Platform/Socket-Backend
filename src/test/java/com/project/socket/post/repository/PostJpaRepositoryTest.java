@@ -40,8 +40,9 @@ class PostJpaRepositoryTest {
         assertThat(foundPost).isNotPresent();
     }
 
+
+    //@Sql("savePost.sql")
     @Test
-    @Sql("savePost.sql")
     void Post_엔티티_저장한다() {
         Optional<User> user = userJpaRepository.findById(1L);
 

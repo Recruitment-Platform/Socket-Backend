@@ -18,32 +18,33 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AddCommentService implements AddCommentUseCase {
 
-  private final CommentJpaRepository commentJpaRepository;
-  private final UserJpaRepository userJpaRepository;
-  private final PostJpaRepository postJpaRepository;
+    private final CommentJpaRepository commentJpaRepository;
+    private final UserJpaRepository userJpaRepository;
+    private final PostJpaRepository postJpaRepository;
 
-  @Override
-  @Transactional
-  public Comment apply(AddCommentCommand addCommentCommand) {
-    User writer = findUser(addCommentCommand.userId());
-    Post postToAddComment = findPost(addCommentCommand.postId());
+    @Override
+    @Transactional
+    public Comment apply(AddCommentCommand addCommentCommand) {
+        User writer = findUser(addCommentCommand.userId());
+        Post postToAddComment = findPost(addCommentCommand.postId());
 
-    Comment commentToSave = Comment.createNewComment(
-        postToAddComment, writer, addCommentCommand.content());
+        Comment commentToSave = Comment.createNewComment(
+                postToAddComment, writer, addCommentCommand.content());
 
-    Comment savedComment = saveComment(commentToSave);
-    return savedComment;
-  }
+        Comment savedComment = saveComment(commentToSave);
 
-  private Comment saveComment(Comment comment) {
-    return commentJpaRepository.save(comment);
-  }
+        return savedComment;
+    }
 
-  private User findUser(Long userId) {
-    return userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-  }
+    private Comment saveComment(Comment comment) {
+        return commentJpaRepository.save(comment);
+    }
 
-  private Post findPost(Long postId) {
-    return postJpaRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
-  }
+    private User findUser(Long userId) {
+        return userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    private Post findPost(Long postId) {
+        return postJpaRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+    }
 }

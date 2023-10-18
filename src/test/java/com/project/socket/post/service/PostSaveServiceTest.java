@@ -6,6 +6,7 @@ import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostStatus;
 import com.project.socket.post.model.PostType;
 import com.project.socket.post.repository.PostJpaRepository;
+import com.project.socket.post.service.usecase.PostSaveInfo;
 import com.project.socket.user.exception.UserNotFoundException;
 import com.project.socket.user.model.User;
 import com.project.socket.user.repository.UserJpaRepository;
@@ -29,10 +30,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(ReplaceUnderscores.class)
-class PostServiceTest {
+class PostSaveServiceTest {
 
     @InjectMocks
-    PostService postService;
+    PostSaveService postSaveService;
 
     @Mock
     PostJpaRepository postJpaRepository;
@@ -44,18 +45,17 @@ class PostServiceTest {
     ArgumentCaptor<Post> postCaptor;
 
 
-    PostSaveRequestDto createPost() {
-        return new PostSaveRequestDto(1L, new User("userA"), "테스트제목", "테스트 내용입니다",
-                PostStatus.CREATED, PostType.PROJECT, PostMeeting.ONLINE);
+    PostSaveInfo createPost() {
+        return new PostSaveInfo("테스트 제목", "테스트 내용", PostType.PROJECT, PostMeeting.ONLINE, 1L);
     }
 
     @Test
     void id에_해당하는_유저가_없으면_UserNotFoundException_예외가_발생한다() {
-        PostSaveRequestDto postNew = createPost();
+        PostSaveInfo postNew = createPost();
         when(userJpaRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertAll(
-                () -> assertThatThrownBy(() -> postService.save(postNew)).isInstanceOf(UserNotFoundException.class),
+                () -> assertThatThrownBy(() -> postSaveService.savePost(postNew)).isInstanceOf(UserNotFoundException.class),
                 () -> verify(postJpaRepository, never()).findById(anyLong())
         );
     }
