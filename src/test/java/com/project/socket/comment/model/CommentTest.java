@@ -57,6 +57,15 @@ class CommentTest {
     assertThat(comment.validateRelation(1L, 1L)).isTrue();
   }
 
+  @Test
+  void comment의_status를_DELETED로_변경한다 (){
+    Comment comment = Comment.builder().commentStatus(CommentStatus.CREATED).build();
+
+    comment.changeStatusToDeleted();
+
+    assertThat(comment.getCommentStatus()).isEqualTo(CommentStatus.DELETED);
+  }
+
   private static Stream<Arguments> providePostIdAndUserId(){
     return Stream.of(
         Arguments.of(1L, 2L),
