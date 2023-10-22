@@ -21,13 +21,13 @@ public class PostSaveService {
      * 포스트(게시물) 생성
      */
     @Transactional
-    public Long createPost(PostSaveInfo postSaveInfo) {
+    public Post createPost(PostSaveInfo postSaveInfo) {
         User user = findUser(postSaveInfo.userId());
 
         Post postToSave = Post.createNewPost(user, postSaveInfo.title(), postSaveInfo.postContent(),
                 postSaveInfo.postType(), postSaveInfo.postMeeting());
 
-        Long savedPost = savePost(postToSave);
+        Post savedPost = savePost(postToSave);
 
         return savedPost;
     }
@@ -38,8 +38,7 @@ public class PostSaveService {
 
 
     @Transactional
-    public Long savePost(Post post) {
-        Post saved = postJpaRepository.save(post);
-        return saved.getId();
+    public Post savePost(Post post) {
+        return postJpaRepository.save(post);
     }
 }

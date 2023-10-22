@@ -4,7 +4,6 @@ package com.project.socket.post.repository;
 import com.project.socket.common.annotation.CustomDataJpaTest;
 import com.project.socket.post.model.Post;
 import com.project.socket.post.model.PostMeeting;
-import com.project.socket.post.model.PostStatus;
 import com.project.socket.post.model.PostType;
 import com.project.socket.user.model.User;
 import com.project.socket.user.repository.UserJpaRepository;
@@ -50,7 +49,6 @@ class PostJpaRepositoryTest {
                 .user(user.get())
                 .title("aaaa")
                 .postContent("안녕하세요")
-                .postStatus(PostStatus.CREATED)
                 .postType(PostType.PROJECT)
                 .postMeeting(PostMeeting.ONLINE)
                 .build();

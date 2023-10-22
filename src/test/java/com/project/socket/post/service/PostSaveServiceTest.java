@@ -1,6 +1,5 @@
 package com.project.socket.post.service;
 
-import com.project.socket.post.controller.dto.request.PostSaveRequestDto;
 import com.project.socket.post.model.Post;
 import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostStatus;
@@ -55,27 +54,25 @@ class PostSaveServiceTest {
         when(userJpaRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertAll(
-                () -> assertThatThrownBy(() -> postSaveService.savePost(postNew)).isInstanceOf(UserNotFoundException.class),
+                () -> assertThatThrownBy(() -> postSaveService.createPost(postNew)).isInstanceOf(UserNotFoundException.class),
                 () -> verify(postJpaRepository, never()).findById(anyLong())
         );
     }
 
     @Test
     void 유저가_존재하면_Post를_생성한다() {
-        PostSaveRequestDto postNew = createPost();
-        User userNew = User.builder().userId(1L).build();
+        PostSaveInfo postNew = createPost();
+        User writer = User.builder().userId(1L).build();
 
         Post post = Post.builder().id(1L)
-                .user(userNew)
-                .title(postNew.getTitle())
-                .postContent(postNew.getPostContent())
-                .postStatus(postNew.getPostStatus())
-                .postType(postNew.getPostType())
-                .postMeeting(postNew.getPostMeeting())
+                .title(postNew.title())
+                .postContent(postNew.postContent())
+                .postType(postNew.postType())
+                .postMeeting(postNew.postMeeting())
                 .build();
 
 
-        when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(userNew));
+        when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(writer));
         when(postJpaRepository.findById(anyLong())).thenReturn(Optional.of(post));
 
         verify(postJpaRepository).save(postCaptor.capture());

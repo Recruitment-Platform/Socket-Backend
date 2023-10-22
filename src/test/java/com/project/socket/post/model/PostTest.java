@@ -29,7 +29,6 @@ class PostTest {
         assertThat(findPost).satisfies(post -> {
                     assertThat(post.getTitle()).isEqualTo(title);
                     assertThat(post.getPostContent()).isEqualTo(postContent);
-                    assertThat(post.getPostStatus()).isEqualTo(PostStatus.CREATED);
                     assertThat(post.getPostType()).isEqualTo(postType);
                     assertThat(post.getPostMeeting()).isEqualTo(postMeeting);
                 }

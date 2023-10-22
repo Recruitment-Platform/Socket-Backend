@@ -1,6 +1,7 @@
 package com.project.socket.post.controller;
 
 import com.project.socket.post.controller.dto.request.PostSaveRequestDto;
+import com.project.socket.post.model.Post;
 import com.project.socket.post.service.PostSaveService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,11 @@ public class PostSaveController {
 
         long userId = Long.parseLong(userDetails.getUsername());
 
-        Long savedPost = postSaveService.createPost(postSaveRequestDto.toSave(userId));
+        Post savedPost = postSaveService.createPost(postSaveRequestDto.toSave(userId));
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPost)
+                .buildAndExpand(savedPost.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

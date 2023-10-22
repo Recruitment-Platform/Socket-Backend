@@ -46,7 +46,6 @@ public class Post extends BaseTime {
                 .user(user)
                 .title(title)
                 .postContent(content)
-                .postStatus(PostStatus.CREATED)
                 .postType(postType)
                 .postMeeting(postMeeting)
                 .build();
