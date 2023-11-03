@@ -1,0 +1,5 @@
+:doctype: book
+:icons: font
+
+[[comment-status]]
+operation::sample-enums-response[snippets='custom-response-fields-commentStatus']

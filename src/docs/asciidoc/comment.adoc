@@ -17,3 +17,8 @@ operation::modifyComment[snippets='http-request,path-parameters,request-headers,
 === 댓글 삭제
 
 operation::deleteComment[snippets='http-request,path-parameters,request-headers,http-response']
+
+[[get-all-comments-of-post]]
+=== 포스트의 댓글 목록 조회
+
+operation::getAllCommentsOfPost[snippets='http-request,path-parameters,http-response,response-fields']
