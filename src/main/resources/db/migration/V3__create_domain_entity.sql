@@ -8,7 +8,6 @@ create table IF NOT EXISTS post
     modified_at     datetime(6)     not null,
     post_status     enum       ('CREATED','MODIFIED','DELETED'),
     post_type       enum       ('PROJECT','STUDY'),
-    post_meeting    enum       ('ONLINE', 'OFFLINE', 'ON_OFFLINE'),
     FOREIGN KEY (user_id) REFERENCES user (user_id)
 );
 create table IF NOT EXISTS comment

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.RECORD_COMPONENT, ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(validatedBy = ValueOfEnumCheck.class)
 public @interface EnumCheck {
 

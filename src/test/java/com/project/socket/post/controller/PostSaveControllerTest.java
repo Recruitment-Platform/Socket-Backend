@@ -14,6 +14,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,7 +30,8 @@ import com.project.socket.user.exception.UserNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -80,10 +82,10 @@ class PostSaveControllerTest {
                         .type(JsonFieldType.STRING).description("게시물 내용")
                         .attributes(RestDocsAttributeFactory.constraintsField("널 x, 공백 x")),
                     fieldWithPath("postType")
-                        .type(JsonFieldType.STRING).description("프로젝트/스터디")
+                        .type(JsonFieldType.STRING).description("PROJECT/STUDY")
                         .attributes(RestDocsAttributeFactory.constraintsField("널 x, 공백 x")),
                     fieldWithPath("postMeeting")
-                        .type(JsonFieldType.STRING).description("온라인/오프라인")
+                        .type(JsonFieldType.STRING).description("ONLINE/OFFLINE/ON_OFFLINE")
                         .attributes(RestDocsAttributeFactory.constraintsField("널 x, 공백 x"))
                 ),
                 responseHeaders(
@@ -111,20 +113,67 @@ class PostSaveControllerTest {
 
   }
 
-  @ParameterizedTest
-  @CsvSource(value = {"null,null,null,null"}, nullValues = "null")
+  @ParameterizedTest(name = "title이_{0}이면_400_응답을_한다")
+  @NullAndEmptySource
+  @ValueSource(strings = {" "})
   @WithMockUser(username = "1", authorities = "ROLE_USER")
-  void PostSaveRequestDto_not_valid(String title, String postContent, PostType postType,
-      PostMeeting postMeeting) throws Exception {
+  void PostSaveRequestDto_title_not_valid(String title) throws Exception {
 
-    PostSaveRequestDto requestBody = new PostSaveRequestDto(title, postContent, postType,
-        postMeeting);
+    PostSaveRequestDto requestBody = new PostSaveRequestDto(title, "test_postContent",
+        PostType.PROJECT,
+        PostMeeting.ONLINE);
 
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(requestBody)))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andDo(print());
   }
+
+  @ParameterizedTest(name = "postContent가_{0}이면_400_응답을_한다")
+  @NullAndEmptySource
+  @ValueSource(strings = {" "})
+  @WithMockUser(username = "1", authorities = "ROLE_USER")
+  void PostSaveRequestDto_postContent_not_valid(String postContent) throws Exception {
+
+    PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", postContent,
+        PostType.PROJECT, PostMeeting.ONLINE);
+
+    mockMvc.perform(post("/posts")
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestBody)))
+        .andExpect(status().isBadRequest())
+        .andDo(print());
+  }
+
+  @Test
+  @WithMockUser(username = "1", authorities = "ROLE_USER")
+  void PostSaveRequestDto_postType_not_valid() throws Exception {
+
+    PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", "test_postContent",
+        null, PostMeeting.ONLINE);
+
+    mockMvc.perform(post("/posts")
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestBody)))
+        .andExpect(status().isBadRequest())
+        .andDo(print());
+  }
+
+  @Test
+  @WithMockUser(username = "1", authorities = "ROLE_USER")
+  void PostSaveRequestDto_postMeeting_not_valid() throws Exception {
+
+    PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", "test_postContent",
+        PostType.PROJECT, null);
+
+    mockMvc.perform(post("/posts")
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestBody)))
+        .andExpect(status().isBadRequest())
+        .andDo(print());
+  }
+
 }
 
 

@@ -2,8 +2,10 @@ package com.project.socket.common.EnumValidCheck;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.stereotype.Component;
 
-public class ValueOfEnumCheck implements ConstraintValidator<EnumCheck, String> {
+@Component
+public class ValueOfEnumCheck implements ConstraintValidator<EnumCheck, Enum> {
 
   private EnumCheck enumCheck;
 
@@ -13,19 +15,17 @@ public class ValueOfEnumCheck implements ConstraintValidator<EnumCheck, String> 
   }
 
   @Override
-  public boolean isValid(String value, ConstraintValidatorContext context) {
-    try {
-      boolean result = false;
-      Enum<?>[] enumValues = this.enumCheck.enumClass().getEnumConstants();
-      if (enumValues != null) {
-        for (Object enumValue : enumValues) {
-          return value.equals(enumCheck.toString());
+  public boolean isValid(Enum value, ConstraintValidatorContext context) {
+    boolean result = false;
+    Object[] enumValues = this.enumCheck.enumClass().getEnumConstants();
+    if (enumValues != null) {
+      for (Object enumValue : enumValues) {
+        if (value == enumValue) {
+          result = true;
+          break;
         }
       }
-    } catch (Exception e) {
-      return false;
     }
-    return false;
+    return result;
   }
-
 }
