@@ -40,13 +40,13 @@ class PostJpaRepositoryTest {
     }
 
 
-    //@Sql("savePost.sql")
+    @Sql("savePost.sql")
     @Test
     void Post_엔티티_저장한다() {
-        Optional<User> user = userJpaRepository.findById(1L);
+        Optional<User> findUser = userJpaRepository.findById(1L);
 
         Post post = Post.builder()
-                .user(user.get())
+                .user(findUser.get())
                 .title("aaaa")
                 .postContent("안녕하세요")
                 .postType(PostType.PROJECT)
@@ -56,6 +56,10 @@ class PostJpaRepositoryTest {
         Post savedPost = postJpaRepository.save(post);
 
         assertThat(savedPost.getId()).isNotNull();
+        assertThat(savedPost.getTitle()).isNotNull();
+        assertThat(savedPost.getPostContent()).isNotNull();
+        assertThat(savedPost.getPostType()).isNotNull();
+        assertThat(savedPost.getPostMeeting()).isNotNull();
     }
 }
 

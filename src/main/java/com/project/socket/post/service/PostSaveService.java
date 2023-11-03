@@ -10,35 +10,32 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class PostSaveService {
 
-    private final PostJpaRepository postJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+  private final PostJpaRepository postJpaRepository;
+  private final UserJpaRepository userJpaRepository;
 
-    /**
-     * 포스트(게시물) 생성
-     */
-    @Transactional
-    public Post createPost(PostSaveInfo postSaveInfo) {
-        User user = findUser(postSaveInfo.userId());
+  /**
+   * 포스트(게시물) 생성
+   */
+  @Transactional
+  public Post createPost(PostSaveInfo postSaveInfo) {
+    User user = findUser(postSaveInfo.userId());
 
-        Post postToSave = Post.createNewPost(user, postSaveInfo.title(), postSaveInfo.postContent(),
-                postSaveInfo.postType(), postSaveInfo.postMeeting());
+    Post postToSave = Post.createNewPost(user, postSaveInfo.title(), postSaveInfo.postContent(),
+        postSaveInfo.postType(), postSaveInfo.postMeeting());
 
-        Post savedPost = savePost(postToSave);
+    return savePost(postToSave);
+  }
 
-        return savedPost;
-    }
-
-    private User findUser(Long userId) {
-        return userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-    }
+  private User findUser(Long userId) {
+    return userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+  }
 
 
-    @Transactional
-    public Post savePost(Post post) {
-        return postJpaRepository.save(post);
-    }
+  public Post savePost(Post post) {
+    return postJpaRepository.save(post);
+  }
 }
