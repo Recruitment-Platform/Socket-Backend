@@ -12,3 +12,8 @@ operation::addReply[snippets='http-request,path-parameters,request-headers,reque
 === 댓글 수정
 
 operation::modifyComment[snippets='http-request,path-parameters,request-headers,request-fields,http-response']
+
+[[delete-reply]]
+=== 댓글 삭제
+
+operation::deleteComment[snippets='http-request,path-parameters,request-headers,http-response']

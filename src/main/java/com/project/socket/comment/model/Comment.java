@@ -70,6 +70,10 @@ public class Comment extends BaseTime {
     this.commentStatus = CommentStatus.MODIFIED;
   }
 
+  public void changeStatusToDeleted(){
+    this.commentStatus = CommentStatus.DELETED;
+  }
+
   @Builder
   public Comment(Long id, Post cPost, User writer, String content, Comment parentComment,
       CommentStatus commentStatus) {

@@ -19,8 +19,6 @@ spring:
 logging:
   level:
     org.springframework.security: trace
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
 
 server:
   shutdown: graceful
