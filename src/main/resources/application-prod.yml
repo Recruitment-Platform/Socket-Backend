@@ -19,6 +19,8 @@ spring:
 logging:
   level:
     org.springframework.security: trace
+    com.zaxxer.hikari: TRACE
+    com.zaxxer.hikari.HikariConfig: DEBUG
 
 server:
   shutdown: graceful
