@@ -1,5 +1,6 @@
 package com.project.socket.common.annotation;
 
+import com.project.socket.config.JacksonConfig;
 import com.project.socket.config.SecurityTestConfig;
 import com.project.socket.security.filter.JwtFilter;
 import java.lang.annotation.ElementType;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -22,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 @AutoConfigureRestDocs
 @ContextConfiguration(classes = SecurityTestConfig.class)
 @DisplayNameGeneration(ReplaceUnderscores.class)
+@Import(JacksonConfig.class)
 public @interface CustomWebMvcTestWithRestDocs {
 
   @AliasFor(annotation = WebMvcTest.class, attribute = "controllers")

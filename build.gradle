@@ -75,7 +75,7 @@ asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
     sources {
-        include("**/index.adoc")
+        include("**/index.adoc","**/common/*.adoc")
     }
     baseDirFollowsSourceFile()
 }
@@ -110,9 +110,9 @@ sonar {
         property 'sonar.language', 'java'
         property 'sonar.test.inclusions', '**/*Test.java'
         property 'sonar.java.binaries', 'build/classes'
-        property 'sonar.exclusions', '**/*Application*.java, **/*Exception*.java, **/resources/*,' +
-                '**/CommonDocController.java, **/ProblemDetailFieldDescription.java, **/RestDocsAttributeFactory.java,' +
-                '**/SecurityTestConfig.java, **/annotaion/*, **/model/Q*.*'
+        property 'sonar.exclusions', '**/*Application*.java, **/*Exception*.java, **/resources/**,' +
+                '**/CommonDocController.java, **/ProblemDetailFieldDescription.java, **/docs/*,' +
+                '**/SecurityTestConfig.java, **/annotaion/*, **/model/Q*.*, **/ApiResponseDto.java'
     }
 }
 

@@ -5,6 +5,7 @@
 :toc: left
 :toclevels: 2
 :sectlinks:
+:docinfo: shared-head
 
 [[overview]]
 == Overview
