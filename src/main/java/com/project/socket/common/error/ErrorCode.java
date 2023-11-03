@@ -18,8 +18,10 @@ public enum ErrorCode {
   DUPLICATED_NICKNAME(400, "U2", "중복된 닉네임입니다"),
 
   // post
-  POST_NOT_FOUND(404, "P1", "해당 포스트가 존재하지 않습니다");
+  POST_NOT_FOUND(404, "P1", "해당 포스트가 존재하지 않습니다"),
   // comment
+  COMMENT_NOT_FOUND(404, "CM1", "해당 댓글이 존재하지 않습니다"),
+  INVALID_COMMENT_RELATION(400, "CM2", "잘못된 요청입니다");
 
   private int status;
   private final String code;

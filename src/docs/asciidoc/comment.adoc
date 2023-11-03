@@ -1,4 +1,14 @@
 [[add-comment]]
 === 댓글 추가
 
-operation::addComment[snippets='http-request,request-headers,request-fields,http-response,response-headers']
+operation::addComment[snippets='http-request,path-parameters,request-headers,request-fields,http-response,response-headers']
+
+[[add-reply]]
+=== 대댓글 추가
+
+operation::addReply[snippets='http-request,path-parameters,request-headers,request-fields,http-response,response-headers']
+
+[[modify-reply]]
+=== 댓글 수정
+
+operation::modifyComment[snippets='http-request,path-parameters,request-headers,request-fields,http-response']

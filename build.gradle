@@ -46,6 +46,12 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    //querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
@@ -56,6 +62,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 
@@ -101,7 +110,7 @@ sonar {
         property 'sonar.java.binaries', 'build/classes'
         property 'sonar.exclusions', '**/*Application*.java, **/*Exception*.java, **/resources/*,' +
                 '**/CommonDocController.java, **/ProblemDetailFieldDescription.java, **/RestDocsAttributeFactory.java,' +
-                '**/SecurityTestConfig.java, **/annotaion/*'
+                '**/SecurityTestConfig.java, **/annotaion/*, **/model/Q*.*'
     }
 }
 
@@ -121,6 +130,7 @@ jacocoTestReport {
                     fileTree(dir: it, excludes: [
                             '**/*Application*',  // 테스트를 제외할 경로를 Ant 스타일로 작성
                             '**/*Exception*',
+                            '**/model/Q*'
                     ])
                 })
         )
@@ -164,6 +174,7 @@ jacocoTestCoverageVerification {
             excludes = [
                     '*.*Application',
                     '*.*Exception',
+                    '*.model.Q*'
             ]
         }
     }
@@ -194,4 +205,8 @@ jib {
                 "GOOGLE_CLIENT_SECRET"  : System.getenv("GOOGLE_CLIENT_SECRET"),
         ]
     }
+}
+
+clean {
+    delete file('src/main/generated')
 }

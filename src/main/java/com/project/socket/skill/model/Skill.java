@@ -1,4 +1,4 @@
-package com.project.socket.recruit;
+package com.project.socket.skill.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,20 +13,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Recruit {
+public class Skill {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "recruit_id")
-  private Long id;                  // 모집분야 ID
+  @Column(name = "skill_id")
+  private Long id;
 
-  @Column(name = "field_name")
-  private String fieldName;         // 분야 이름
+  @Column(name = "skill_name")
+  private String skillName;
 
 
   @Builder
-  public Recruit(Long id, String fieldName) {
+  public Skill(Long id, String skillName) {
     this.id = id;
-    this.fieldName = fieldName;
+    this.skillName = skillName;
   }
 }
