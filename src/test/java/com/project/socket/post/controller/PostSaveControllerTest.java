@@ -25,7 +25,7 @@ import com.project.socket.post.controller.dto.request.PostSaveRequestDto;
 import com.project.socket.post.model.Post;
 import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostType;
-import com.project.socket.post.service.PostSaveService;
+import com.project.socket.post.service.usecase.PostSaveUseCase;
 import com.project.socket.user.exception.UserNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class PostSaveControllerTest {
   ObjectMapper objectMapper;
 
   @MockBean
-  PostSaveService postSaveService;
+  PostSaveUseCase postSaveUseCase;
 
   @Test
   @WithMockUser(username = "1", authorities = "ROLE_USER")
@@ -57,7 +57,7 @@ class PostSaveControllerTest {
     PostSaveRequestDto requestBody = new PostSaveRequestDto("title", "content", PostType.PROJECT,
         PostMeeting.ONLINE);
 
-    when(postSaveService.createPost(any())).thenReturn(Post.builder().id(1L).build());
+    when(postSaveUseCase.createPost(any())).thenReturn(Post.builder().id(1L).build());
 
     mockMvc.perform(post("/posts")
             .header("Authorization", "Bearer access-token")
@@ -104,7 +104,7 @@ class PostSaveControllerTest {
         PostType.PROJECT, PostMeeting.ONLINE);
 
     Assertions.assertThat(requestBody.title()).isEqualTo("testTitle");
-    when(postSaveService.createPost(any())).thenThrow(new UserNotFoundException(1L));
+    when(postSaveUseCase.createPost(any())).thenThrow(new UserNotFoundException(1L));
 
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
@@ -148,7 +148,7 @@ class PostSaveControllerTest {
 
   @Test
   @WithMockUser(username = "1", authorities = "ROLE_USER")
-  void PostSaveRequestDto_postType_not_valid() throws Exception {
+  void PostSaveRequestDto_postType_not_valid_400_응답을_한다() throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", "test_postContent",
         null, PostMeeting.ONLINE);
@@ -162,7 +162,7 @@ class PostSaveControllerTest {
 
   @Test
   @WithMockUser(username = "1", authorities = "ROLE_USER")
-  void PostSaveRequestDto_postMeeting_not_valid() throws Exception {
+  void PostSaveRequestDto_postMeeting_not_valid_400_응답을_한다() throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", "test_postContent",
         PostType.PROJECT, null);
@@ -170,8 +170,8 @@ class PostSaveControllerTest {
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(requestBody)))
-        .andExpect(status().isBadRequest())
-        .andDo(print());
+        .andExpect(status().isBadRequest());
+
   }
 
 }
