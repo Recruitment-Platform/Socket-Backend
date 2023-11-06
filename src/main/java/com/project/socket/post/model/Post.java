@@ -53,12 +53,12 @@ public class Post extends BaseTime {
   private PostMeeting postMeeting;                     // 온,오프라인 여부(ONLINE/OFFLINE/ON_OFFLINE)
 
 
-  public static Post createNewPost(User user, String title, String content, PostType postType,
+  public static Post createNewPost(User user, String title, String postContent, PostType postType,
       PostMeeting postMeeting) {
     return Post.builder()
         .user(user)
         .title(title)
-        .postContent(content)
+        .postContent(postContent)
         .postType(postType)
         .postMeeting(postMeeting)
         .postStatus(PostStatus.CREATED)
