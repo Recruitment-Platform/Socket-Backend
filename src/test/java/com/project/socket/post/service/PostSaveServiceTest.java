@@ -14,7 +14,7 @@ import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostStatus;
 import com.project.socket.post.model.PostType;
 import com.project.socket.post.repository.PostJpaRepository;
-import com.project.socket.post.service.usecase.PostSaveInfo;
+import com.project.socket.post.service.usecase.PostSaveCommand;
 import com.project.socket.user.exception.UserNotFoundException;
 import com.project.socket.user.model.User;
 import com.project.socket.user.repository.UserJpaRepository;
@@ -46,13 +46,13 @@ class PostSaveServiceTest {
   ArgumentCaptor<Post> postCaptor;
 
 
-  PostSaveInfo createPost() {
-    return new PostSaveInfo("테스트 제목", "테스트 내용", PostType.PROJECT, PostMeeting.ONLINE, 1L);
+  PostSaveCommand createPost() {
+    return new PostSaveCommand("테스트 제목", "테스트 내용", PostType.PROJECT, PostMeeting.ONLINE, 1L);
   }
 
   @Test
   void id에_해당하는_유저가_없으면_UserNotFoundException_예외가_발생한다() {
-    PostSaveInfo postNew = createPost();
+    PostSaveCommand postNew = createPost();
     when(userJpaRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     assertAll(
@@ -64,7 +64,7 @@ class PostSaveServiceTest {
 
   @Test
   void 유저가_존재하면_Post를_생성한다() {
-    PostSaveInfo postNew = createPost();
+    PostSaveCommand postNew = createPost();
     User writer = User.builder().userId(1L).build();
 
     Post post = Post.builder().id(1L)
