@@ -1,0 +1,4 @@
+[[save-post]]
+=== 포스트 추가
+
+operation::savePost[snippets='http-request,request-headers,request-fields,http-response,response-headers']

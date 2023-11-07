@@ -23,3 +23,8 @@ include::signup.adoc[]
 == Comment API
 
 include::comment.adoc[]
+
+[[postAPI]]
+== Post API
+
+include::post.adoc[]
