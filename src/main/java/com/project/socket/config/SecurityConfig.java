@@ -8,6 +8,7 @@ import com.project.socket.security.handler.CustomAuthenticationEntryPoint;
 import com.project.socket.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.project.socket.security.oauth2.handler.OAuth2LoginFailureHandler;
 import com.project.socket.security.oauth2.handler.OAuth2LoginSuccessHandler;
+import com.project.socket.user.model.Role;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,8 @@ public class SecurityConfig {
             .requestMatchers("/docs/**", "/actuator/**", "/error/**", "/").permitAll()
             .requestMatchers(HttpMethod.GET, "/posts/{postId}/comments").permitAll()
             .requestMatchers("/signup").authenticated()
+            .requestMatchers(HttpMethod.POST, "/posts/{postId}/chat-rooms")
+            .hasAuthority(Role.ROLE_USER.name())
             .anyRequest().authenticated())
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(exceptionHandling -> exceptionHandling
