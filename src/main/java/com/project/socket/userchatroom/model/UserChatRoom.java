@@ -1,5 +1,6 @@
-package com.project.socket.chatroom.model;
+package com.project.socket.userchatroom.model;
 
+import com.project.socket.chatroom.model.ChatRoom;
 import com.project.socket.user.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "user_chat_room")
-public class UserChatroom {
+public class UserChatRoom {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,7 @@ public class UserChatroom {
   private ChatRoom chatRoom;
 
   @Builder
-  public UserChatroom(Long userChatRoomId, User user, ChatRoom chatRoom) {
+  public UserChatRoom(Long userChatRoomId, User user, ChatRoom chatRoom) {
     this.userChatRoomId = userChatRoomId;
     this.user = user;
     this.chatRoom = chatRoom;
