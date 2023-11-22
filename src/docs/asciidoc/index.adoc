@@ -28,3 +28,8 @@ include::comment.adoc[]
 == Post API
 
 include::post.adoc[]
+
+[[CHATROOM-API]]
+== Chat Room API
+
+include::chatroom.adoc[]
