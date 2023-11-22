@@ -18,6 +18,7 @@ import com.project.socket.post.model.Post;
 import com.project.socket.post.repository.PostJpaRepository;
 import com.project.socket.user.model.User;
 import com.project.socket.userchatroom.model.UserChatRoom;
+import com.project.socket.userchatroom.model.UserChatRoomStatus;
 import com.project.socket.userchatroom.repository.UserChatRoomRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -53,6 +54,7 @@ class CreateChatRoomServiceTest {
     assertAll(
         () -> assertThatThrownBy(() -> createChatRoomService.apply(command))
             .isInstanceOf(PostNotFoundException.class),
+        () -> verify(userChatRoomRepository, never()).findByUserIdAndPostId(anyLong(), anyLong()),
         () -> verify(chatRoomRepository, never()).save(any()),
         () -> verify(userChatRoomRepository, never()).save(any()),
         () -> verify(userChatRoomRepository, never()).save(any())
@@ -60,10 +62,45 @@ class CreateChatRoomServiceTest {
   }
 
   @Test
+  void 입장_중인_채팅방이_있으면_기존_채팅방을_반환한다() {
+    Post post = Post.builder().user(User.builder().userId(1L).build()).build();
+    ChatRoom chatRoom = ChatRoom.builder().chatRoomId(1L).build();
+    UserChatRoom userChatRoom = UserChatRoom.builder().userChatRoomId(1L)
+                                            .userChatRoomStatus(UserChatRoomStatus.ENTER)
+                                            .chatRoom(chatRoom).build();
+    when(postJpaRepository.findById(anyLong())).thenReturn(Optional.of(post));
+    when(userChatRoomRepository.findByUserIdAndPostId(anyLong(), anyLong()))
+        .thenReturn(userChatRoom);
+
+    ChatRoom savedChatRoom = createChatRoomService.apply(command);
+
+    assertThat(savedChatRoom.getChatRoomId()).isEqualTo(1L);
+  }
+
+  @Test
+  void 기존_채팅방이_존재하지만_퇴장했었다면_입장변경하고_반환한다() {
+    Post post = Post.builder().user(User.builder().userId(1L).build()).build();
+    ChatRoom chatRoom = ChatRoom.builder().chatRoomId(1L).build();
+    UserChatRoom userChatRoom = UserChatRoom.builder().userChatRoomId(1L)
+                                            .userChatRoomStatus(UserChatRoomStatus.EXIT)
+                                            .chatRoom(chatRoom).build();
+    when(postJpaRepository.findById(anyLong())).thenReturn(Optional.of(post));
+    when(userChatRoomRepository.findByUserIdAndPostId(anyLong(), anyLong()))
+        .thenReturn(userChatRoom);
+
+    ChatRoom savedChatRoom = createChatRoomService.apply(command);
+
+    assertAll(
+        () -> assertThat(userChatRoom.getUserChatRoomStatus()).isEqualTo(UserChatRoomStatus.ENTER),
+        () -> assertThat(savedChatRoom.getChatRoomId()).isEqualTo(1L)
+    );
+  }
+
+  @Test
   void 자신의_포스트에_채팅방을_생성하면_WriterCanNotStartChatException_예외가_발생한다() {
     Post post = Post.builder().user(User.builder().userId(1L).build()).build();
-
     when(postJpaRepository.findById(anyLong())).thenReturn(Optional.of(post));
+    when(userChatRoomRepository.findByUserIdAndPostId(anyLong(), anyLong())).thenReturn(null);
 
     assertAll(
         () -> assertThatThrownBy(() -> createChatRoomService.apply(command))
@@ -89,6 +126,7 @@ class CreateChatRoomServiceTest {
                                               .user(writer).build();
 
     when(postJpaRepository.findById(anyLong())).thenReturn(Optional.of(post));
+    when(userChatRoomRepository.findByUserIdAndPostId(anyLong(), anyLong())).thenReturn(null);
     when(chatRoomRepository.save(any())).thenReturn(savedChatRoom);
 
     // save 메서드가 2번 실행되기 때문에 thenReturn에 리턴값에 원하는 순서대로 2개의 인자
