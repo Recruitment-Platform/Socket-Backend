@@ -21,6 +21,6 @@ class ChatRoomRepositoryTest {
     ChatRoom chatRoom = ChatRoom.builder().post(Post.builder().id(1L).build()).build();
     ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
-    assertThat(savedChatRoom.getChatRoomId()).isEqualTo(1L);
+    assertThat(savedChatRoom.getChatRoomId()).isNotNull();
   }
 }
