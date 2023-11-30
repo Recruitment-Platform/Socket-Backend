@@ -10,7 +10,9 @@ import com.project.socket.post.model.Post;
 import com.project.socket.post.repository.PostJpaRepository;
 import com.project.socket.user.model.User;
 import com.project.socket.userchatroom.model.UserChatRoom;
+import com.project.socket.userchatroom.model.UserChatRoomStatus;
 import com.project.socket.userchatroom.repository.UserChatRoomRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +27,19 @@ public class CreateChatRoomService implements CreateChatRoomUseCase {
 
   @Override
   @Transactional
-  public ChatRoom apply(CreateChatRoomCommand createChatRoomCommand) {
-    Post post = findPost(createChatRoomCommand.postId());
-    checkWriterStartChat(createChatRoomCommand.applicantId(), post.getUser().getUserId());
+  public ChatRoom apply(CreateChatRoomCommand command) {
+    Post post = findPost(command.postId());
+
+    UserChatRoom userChatRoom = userChatRoomRepository.findByUserIdAndPostId(
+        command.applicantId(), command.postId());
+
+    // 이미 채팅방이 존재하면 입장 처리 후 반환
+    if (Objects.nonNull(userChatRoom)) {
+      userChatRoom.enter();
+      return userChatRoom.getChatRoom();
+    }
+
+    checkWriterStartChat(command.applicantId(), post.getUser().getUserId());
 
     ChatRoom chatRoomToSave = ChatRoom.builder().post(post).build();
     ChatRoom savedChatRoom = chatRoomRepository.save(chatRoomToSave);
@@ -35,14 +47,15 @@ public class CreateChatRoomService implements CreateChatRoomUseCase {
     UserChatRoom writerChatRoom = UserChatRoom.builder()
                                               .chatRoom(savedChatRoom)
                                               .user(post.getUser())
+                                              .userChatRoomStatus(UserChatRoomStatus.ENTER)
                                               .build();
 
     UserChatRoom applicantChatRoom = UserChatRoom.builder()
                                                  .chatRoom(savedChatRoom)
                                                  .user(User.builder()
-                                                           .userId(
-                                                               createChatRoomCommand.applicantId())
+                                                           .userId(command.applicantId())
                                                            .build())
+                                                 .userChatRoomStatus(UserChatRoomStatus.ENTER)
                                                  .build();
 
     userChatRoomRepository.save(writerChatRoom);
