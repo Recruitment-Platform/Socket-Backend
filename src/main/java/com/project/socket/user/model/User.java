@@ -62,5 +62,6 @@ public class User extends BaseTime {
   public void updateAdditionalInfo(String nickname, String githubLink) {
     this.nickname = nickname;
     this.githubLink = githubLink;
+    this.profileSetup = true;
   }
 }
