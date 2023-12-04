@@ -32,7 +32,7 @@ public class ChatMessage extends BaseCreatedTime {
 
   @ManyToOne
   @JoinColumn(name = "sender_id")
-  private User user;
+  private User sender;
 
   @Column
   private String content;
@@ -41,11 +41,11 @@ public class ChatMessage extends BaseCreatedTime {
   private int readCount;
 
   @Builder
-  public ChatMessage(Long chatMessageId, ChatRoom chatRoom, User user, String content,
+  public ChatMessage(Long chatMessageId, ChatRoom chatRoom, User sender, String content,
       int readCount) {
     this.chatMessageId = chatMessageId;
     this.chatRoom = chatRoom;
-    this.user = user;
+    this.sender = sender;
     this.content = content;
     this.readCount = readCount;
   }

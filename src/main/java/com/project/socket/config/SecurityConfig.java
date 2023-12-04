@@ -55,6 +55,7 @@ public class SecurityConfig {
         .formLogin(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/docs/**", "/actuator/**", "/error/**", "/").permitAll()
+            .requestMatchers("/ws/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/posts/{postId}/comments").permitAll()
             .requestMatchers("/signup").authenticated()
             .requestMatchers(HttpMethod.POST, "/posts/{postId}/chat-rooms")
@@ -73,7 +74,7 @@ public class SecurityConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowedOrigins(corsOrigins);
+    corsConfiguration.setAllowedOriginPatterns(corsOrigins);
     corsConfiguration.setAllowedHeaders(List.of("*"));
     corsConfiguration.setMaxAge(3600L);
     corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH"));
