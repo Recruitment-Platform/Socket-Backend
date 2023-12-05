@@ -79,4 +79,26 @@ public class Post extends BaseTime {
   }
 
 
+  public boolean validatePostRelation(Long userId) {
+    return this.user.getUserId().equals(userId);
+  }
+
+  public void modifyInfo(Post modifiedEntity) {
+    if ((modifiedEntity.title != null)) {
+      this.title = modifiedEntity.title;
+    }
+    if (modifiedEntity.postContent != null) {
+      this.postContent = modifiedEntity.postContent;
+    }
+    if (modifiedEntity.postType != null) {
+      this.postType = modifiedEntity.postType;
+    }
+    if (modifiedEntity.postMeeting != null) {
+      this.postMeeting = modifiedEntity.postMeeting;
+    }
+    this.postStatus = PostStatus.MODIFIED;
+
+  }
+
+
 }
