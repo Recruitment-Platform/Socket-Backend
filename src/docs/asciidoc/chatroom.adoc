@@ -1,0 +1,4 @@
+[[create-chatroom]]
+=== 채팅방 생성
+
+operation::createChatRoom[snippets='http-request,path-parameters,request-headers,http-response,response-headers,response-body,response-fields']

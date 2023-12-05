@@ -22,7 +22,14 @@ public enum ErrorCode {
   INVALID_POST_RELATION(400, "P2", "잘못된 요청 입니다"),
   // comment
   COMMENT_NOT_FOUND(404, "CM1", "해당 댓글이 존재하지 않습니다"),
-  INVALID_COMMENT_RELATION(400, "CM2", "잘못된 요청입니다");
+  INVALID_COMMENT_RELATION(400, "CM2", "잘못된 요청입니다"),
+
+  /**
+   * ChatRoom 관련 에러 코드
+   */
+  WRITER_CAN_NOT_START_CHAT(400, "CR1", "작성자는 채팅방을 생성할 수 없습니다"),
+  CHAT_ROOM_NOT_FOUND(404, "CR2", "해당 채팅방이 존재하지 않습니다");
+
 
   private int status;
   private final String code;

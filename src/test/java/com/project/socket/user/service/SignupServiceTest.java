@@ -2,7 +2,7 @@ package com.project.socket.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -67,7 +67,8 @@ class SignupServiceTest {
     User updatedUser = signupService.signup(command);
     assertAll(
         () -> assertThat(updatedUser.getGithubLink()).isEqualTo(command.githubLink()),
-        () -> assertThat(updatedUser.getNickname()).isEqualTo(command.nickname())
+        () -> assertThat(updatedUser.getNickname()).isEqualTo(command.nickname()),
+        () -> assertThat(updatedUser.isProfileSetup()).isTrue()
     );
   }
 
