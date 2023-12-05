@@ -2,3 +2,8 @@
 === 포스트 추가
 
 operation::savePost[snippets='http-request,request-headers,request-fields,http-response,response-headers']
+
+[[modify-post]]
+=== 포스트 수정
+
+operation::modifyPost[snippets='http-request,path-parameters,request-headers,request-fields,http-response']
