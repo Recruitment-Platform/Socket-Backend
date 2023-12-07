@@ -30,6 +30,7 @@ import com.project.socket.post.service.usecase.PostModifyUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -135,6 +136,23 @@ public class PostModifyControllerTest {
 
   }
 
+  @ParameterizedTest(name = "변경한_title이_{0}이면_200_응답을_한다")
+  @NullSource
+  @ValueSource(strings = {" test title "})
+  @WithMockUser(username = "1", authorities = "ROLE_USER")
+  void 변경한_title이_null이면_200_응답을_한다(String title) throws Exception {
+    PostModifyRequestDto requestBody = new PostModifyRequestDto(title, "postContent",
+        PostType.PROJECT,
+        PostMeeting.ONLINE);
+
+    mockMvc.perform(patch("/posts/{postId}", POST_ID)
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestBody)))
+        .andExpect(status().isOk())
+        .andDo(print());
+  }
+
+
   @ParameterizedTest(name = "변경한_title이_{0}이면_400_응답을_한다")
   @EmptySource
   @ValueSource(strings = {" "})
@@ -148,10 +166,24 @@ public class PostModifyControllerTest {
     mockMvc.perform(patch("/posts/{postId}", POST_ID)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(requestBody)))
-        .andExpect(status().isBadRequest())
-        .andDo(print());
+        .andExpect(status().isBadRequest());
   }
 
+  @ParameterizedTest(name = "변경한_postContent가_{0}이면_200_응답을_한다")
+  @NullSource
+  @ValueSource(strings = {" test postContent "})
+  @WithMockUser(username = "1", authorities = "ROLE_USER")
+  void PostModifyRequestDto_postContent_null_valid(String postContent) throws Exception {
+    PostModifyRequestDto requestBody = new PostModifyRequestDto("title", postContent,
+        PostType.PROJECT,
+        PostMeeting.ONLINE);
+
+    mockMvc.perform(patch("/posts/{postId}", POST_ID)
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestBody)))
+        .andExpect(status().isOk());
+  }
+  
   @ParameterizedTest(name = "변경한_postContent가_{0}이면_400_응답을_한다")
   @EmptySource
   @ValueSource(strings = {" "})
@@ -164,8 +196,7 @@ public class PostModifyControllerTest {
     mockMvc.perform(patch("/posts/{postId}", POST_ID)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(requestBody)))
-        .andExpect(status().isBadRequest())
-        .andDo(print());
+        .andExpect(status().isBadRequest());
   }
 
   @Test
