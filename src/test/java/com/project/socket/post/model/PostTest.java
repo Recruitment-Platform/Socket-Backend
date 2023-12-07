@@ -40,7 +40,7 @@ class PostTest {
     User user = User.builder().userId(1L).build();
     Post post = Post.builder().user(user).build();
 
-    assertThat(post.isValidPostRelation(1L)).isTrue();
+    assertThat(post.isWriter(1L)).isTrue();
   }
 
   @Test
@@ -48,7 +48,7 @@ class PostTest {
     User user = User.builder().userId(1L).build();
     Post post = Post.builder().user(user).build();
 
-    assertThat(post.isValidPostRelation(2L)).isFalse();
+    assertThat(post.isWriter(2L)).isFalse();
   }
 
   @Test

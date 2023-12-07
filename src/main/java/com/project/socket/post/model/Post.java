@@ -79,7 +79,7 @@ public class Post extends BaseTime {
   }
 
 
-  public boolean isValidPostRelation(Long userId) {
+  public boolean isWriter(Long userId) {
     return this.user.getUserId().equals(userId);
   }
 
