@@ -40,7 +40,7 @@ class PostTest {
     User user = User.builder().userId(1L).build();
     Post post = Post.builder().user(user).build();
 
-    assertThat(post.validatePostRelation(1L)).isTrue();
+    assertThat(post.isValidPostRelation(1L)).isTrue();
   }
 
   @Test
@@ -48,7 +48,83 @@ class PostTest {
     User user = User.builder().userId(1L).build();
     Post post = Post.builder().user(user).build();
 
-    assertThat(post.validatePostRelation(2L)).isFalse();
+    assertThat(post.isValidPostRelation(2L)).isFalse();
+  }
+
+  @Test
+  void post의_title을_수정하고_status를_MODIFIED로_변경한다() {
+    Post samplePost = Post.builder()
+        .postContent("title")
+        .postStatus(PostStatus.CREATED)
+        .build();
+
+    Post modifyTitle = Post.builder()
+        .title("modify title")
+        .build();
+
+    samplePost.modifyInfo(modifyTitle);
+
+    assertThat(samplePost).satisfies(post -> {
+      assertThat(post.getTitle()).isEqualTo("modify title");
+      assertThat(post.getPostStatus()).isEqualTo(PostStatus.MODIFIED);
+    });
+  }
+
+  @Test
+  void post의_postContent를_수정하고_status를_MODIFIED로_변경한다() {
+    Post samplePost = Post.builder()
+        .postContent("content")
+        .postStatus(PostStatus.CREATED)
+        .build();
+
+    Post modifyPostContent = Post.builder()
+        .postContent("modify content")
+        .build();
+
+    samplePost.modifyInfo(modifyPostContent);
+
+    assertThat(samplePost).satisfies(post -> {
+      assertThat(post.getPostContent()).isEqualTo("modify content");
+      assertThat(post.getPostStatus()).isEqualTo(PostStatus.MODIFIED);
+    });
+  }
+
+  @Test
+  void post의_postType을_수정하고_status를_MODIFIED로_변경한다() {
+    Post samplePost = Post.builder()
+        .postType(PostType.STUDY)
+        .postStatus(PostStatus.CREATED)
+        .build();
+
+    Post modifyPostType = Post.builder()
+        .postType(PostType.PROJECT)
+        .build();
+
+    samplePost.modifyInfo(modifyPostType);
+
+    assertThat(samplePost).satisfies(post -> {
+      assertThat(post.getPostType()).isEqualTo(PostType.PROJECT);
+      assertThat(post.getPostStatus()).isEqualTo(PostStatus.MODIFIED);
+    });
+  }
+
+  @Test
+  void post의_postMeeting을_수정하고_status를_MODIFIED로_변경한다() {
+    Post samplePost = Post.builder()
+        .postMeeting(PostMeeting.ONLINE)
+        .postStatus(PostStatus.CREATED)
+        .build();
+
+    Post modifyPostMeeting = Post.builder()
+        .postMeeting(PostMeeting.OFFLINE)
+        .build();
+
+    samplePost.modifyInfo(modifyPostMeeting);
+
+    assertThat(samplePost).satisfies(post -> {
+      assertThat(post.getPostMeeting()).isEqualTo(PostMeeting.OFFLINE);
+      assertThat(post.getPostStatus()).isEqualTo(PostStatus.MODIFIED);
+    });
   }
 
 
