@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@Valid
 public class PostModifyController {
 
   private final PostModifyUseCase postModifyUseCase;
@@ -25,7 +24,7 @@ public class PostModifyController {
   @PatchMapping("posts/{postId}")
   public ResponseEntity<Object> modifyPost(
       @PathVariable @Min(1) Long postId,
-      @RequestBody @Validated PostModifyRequestDto postModifyRequestDto,
+      @RequestBody @Valid PostModifyRequestDto postModifyRequestDto,
       @AuthenticationPrincipal UserDetails userDetails
   ) {
     long userId = Long.parseLong(userDetails.getUsername());
