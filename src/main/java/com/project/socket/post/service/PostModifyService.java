@@ -23,7 +23,7 @@ public class PostModifyService implements PostModifyUseCase {
   public Post modifyPostNew(PostModifyCommand postModifyCommand) {
     Post postToModify = findPost(postModifyCommand.postId());
 
-    if (!postToModify.validatePostRelation(
+    if (!postToModify.isValidPostRelation(
         postModifyCommand.userId())) {
       throw new InvalidPostRelationException();
     }
