@@ -14,10 +14,10 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-public class RedisContainerConnectTest extends ContainerBaseTest {
+class RedisContainerConnectTest extends ContainerBaseTest {
 
   @Autowired
-  RedisTemplate<String, String> redisTemplate;
+  RedisTemplate<String, Object> redisTemplate;
 
   @Test
   void 레디스_컨테이너_연결_테스트() {
