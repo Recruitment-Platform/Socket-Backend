@@ -1,2 +1,2 @@
 cors:
-  allow-origins: 'http://localhost:3000, file://'
+  allow-origins: 'http://localhost:3000, file://, https://jxy.me'
