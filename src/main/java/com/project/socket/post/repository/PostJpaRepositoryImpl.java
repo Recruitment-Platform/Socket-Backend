@@ -22,13 +22,13 @@ public class PostJpaRepositoryImpl implements PostJpaRepositoryCustom {
     return Optional.ofNullable(jpaQueryFactory
         .select(Projections.fields(PostDto.class,
             post.id.as("postId"),
-            post.title.as("title"),
-            post.postContent.as("postContent"),
-            post.postType.stringValue().as("postType"),
-            post.postMeeting.stringValue().as("postMeeting"),
+            post.title,
+            post.postContent,
+            post.postType,
+            post.postMeeting,
             post.postStatus,
             post.createdAt,
-            post.user.userId.as("userId"),
+            post.user.userId,
             post.user.nickname.as("userNickname")))
         .from(post)
         .join(post.user, user)

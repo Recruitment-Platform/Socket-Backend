@@ -1,6 +1,8 @@
 package com.project.socket.post.controller.dto.response;
 
+import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostStatus;
+import com.project.socket.post.model.PostType;
 import com.project.socket.post.service.usecase.PostDto;
 import java.time.LocalDateTime;
 
@@ -8,8 +10,8 @@ public record PostResponseDto(
     Long postId,
     String title,
     String postContent,
-    String postType,
-    String postMeeting,
+    PostType postType,
+    PostMeeting postMeeting,
     PostStatus postStatus,
     Long userId,
     String userNickname,
