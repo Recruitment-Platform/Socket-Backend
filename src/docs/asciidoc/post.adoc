@@ -8,8 +8,8 @@ operation::savePost[snippets='http-request,request-headers,request-fields,http-r
 
 operation::modifyPost[snippets='http-request,path-parameters,request-headers,request-fields,http-response']
 
-[[get-all-post]]
-=== 포스트 조회
+[[get-single-post]]
+=== 포스트 단건 조회
 
 operation::getSinglePost[snippets='http-request,path-parameters,http-response,response-body,response-fields']
 

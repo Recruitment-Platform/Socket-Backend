@@ -12,5 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnumDocs {
+
   Map<String, String> commentStatus;
+  Map<String, String> postMeeting;
+  Map<String, String> postType;
+  Map<String, String> postStatus;
+
 }

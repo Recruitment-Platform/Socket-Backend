@@ -58,40 +58,40 @@ class CommonDocControllerTest {
   @BeforeEach
   void setup(RestDocumentationContextProvider restDocumentation) {
     mockMvc = MockMvcBuilders.standaloneSetup(commonDocController)
-                             .apply(documentationConfiguration(restDocumentation))
-                             .setControllerAdvice(GlobalExceptionHandler.class)
-                             .addFilter(new CharacterEncodingFilter("UTF-8", true))
-                             .build();
+        .apply(documentationConfiguration(restDocumentation))
+        .setControllerAdvice(GlobalExceptionHandler.class)
+        .addFilter(new CharacterEncodingFilter("UTF-8", true))
+        .build();
   }
 
   @Test
   void test() throws Exception {
     SampleRequest sampleRequest = new SampleRequest("", "email");
     mockMvc.perform(
-               post("/sample/error")
-                   .contentType(MediaType.APPLICATION_JSON)
-                   .content(objectMapper.writeValueAsBytes(sampleRequest)))
-           .andExpect(status().isBadRequest())
-           .andDo(
-               document("sample-error-response",
-                   preprocessRequest(prettyPrint()),
-                   preprocessResponse(prettyPrint()),
-                   responseFields(
-                       fieldWithPath(TYPE.getField()).description(TYPE.getDescription()),
-                       fieldWithPath(TITLE.getField()).description(TITLE.getDescription()),
-                       fieldWithPath(STATUS.getField()).description(STATUS.getDescription()),
-                       fieldWithPath(DETAIL.getField()).description(DETAIL.getDescription()),
-                       fieldWithPath(DETAIL_LIST_FIELD.getField())
-                           .description(DETAIL_LIST_FIELD.getDescription()).optional(),
-                       fieldWithPath(DETAIL_LIST_VALUE.getField())
-                           .description(DETAIL_LIST_VALUE.getDescription()).optional(),
-                       fieldWithPath(DETAIL_LIST_REASON.getField())
-                           .description(DETAIL_LIST_REASON.getDescription()).optional(),
-                       fieldWithPath(INSTANCE.getField()).description(INSTANCE.getDescription()),
-                       fieldWithPath(CODE.getField()).description(CODE.getDescription()).optional()
-                   )
-               )
-           );
+            post("/sample/error")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(sampleRequest)))
+        .andExpect(status().isBadRequest())
+        .andDo(
+            document("sample-error-response",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                    fieldWithPath(TYPE.getField()).description(TYPE.getDescription()),
+                    fieldWithPath(TITLE.getField()).description(TITLE.getDescription()),
+                    fieldWithPath(STATUS.getField()).description(STATUS.getDescription()),
+                    fieldWithPath(DETAIL.getField()).description(DETAIL.getDescription()),
+                    fieldWithPath(DETAIL_LIST_FIELD.getField())
+                        .description(DETAIL_LIST_FIELD.getDescription()).optional(),
+                    fieldWithPath(DETAIL_LIST_VALUE.getField())
+                        .description(DETAIL_LIST_VALUE.getDescription()).optional(),
+                    fieldWithPath(DETAIL_LIST_REASON.getField())
+                        .description(DETAIL_LIST_REASON.getDescription()).optional(),
+                    fieldWithPath(INSTANCE.getField()).description(INSTANCE.getDescription()),
+                    fieldWithPath(CODE.getField()).description(CODE.getDescription()).optional()
+                )
+            )
+        );
   }
 
   @Test
@@ -105,17 +105,32 @@ class CommonDocControllerTest {
     EnumDocs enumDocs = getData(mvcResult);
 
     result.andExpect(status().isOk())
-          .andDo(
-              document(
-                  "sample-enums-response",
-                  Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-                  Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                  customResponseFields("custom-response",
-                      beneathPath("data.commentStatus").withSubsectionId("commentStatus"),
-                      attributes(key("title").value("commentStatus")),
-                      enumConvertFieldDescriptor((enumDocs.getCommentStatus()))
-                  )
-              ));
+        .andDo(
+            document(
+                "sample-enums-response",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                customResponseFields("custom-response",
+                    beneathPath("data.commentStatus").withSubsectionId("commentStatus"),
+                    attributes(key("title").value("commentStatus")),
+                    enumConvertFieldDescriptor((enumDocs.getCommentStatus()))
+                ),
+                customResponseFields("custom-response",
+                    beneathPath("data.postMeeting").withSubsectionId("postMeeting"),
+                    attributes(key("title").value("postMeeting")),
+                    enumConvertFieldDescriptor((enumDocs.getPostMeeting()))
+                ),
+                customResponseFields("custom-response",
+                    beneathPath("data.postType").withSubsectionId("postType"),
+                    attributes(key("title").value("postType")),
+                    enumConvertFieldDescriptor((enumDocs.getPostType()))
+                ),
+                customResponseFields("custom-response",
+                    beneathPath("data.postStatus").withSubsectionId("postStatus"),
+                    attributes(key("title").value("postStatus")),
+                    enumConvertFieldDescriptor((enumDocs.getPostStatus()))
+                )
+            ));
   }
 
   // 커스텀 템플릿 사용을 위한 함수
@@ -130,8 +145,8 @@ class CommonDocControllerTest {
   // Map으로 넘어온 enumValue를 fieldWithPath로 변경하여 리턴
   private static FieldDescriptor[] enumConvertFieldDescriptor(Map<String, String> enumValues) {
     return enumValues.entrySet().stream()
-                     .map(x -> fieldWithPath(x.getKey()).description(x.getValue()))
-                     .toArray(FieldDescriptor[]::new);
+        .map(x -> fieldWithPath(x.getKey()).description(x.getValue()))
+        .toArray(FieldDescriptor[]::new);
   }
 
   // mvc result 데이터 파싱
