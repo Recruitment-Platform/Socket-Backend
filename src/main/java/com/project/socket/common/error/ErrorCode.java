@@ -20,6 +20,8 @@ public enum ErrorCode {
   // post
   POST_NOT_FOUND(404, "P1", "해당 포스트가 존재하지 않습니다"),
   INVALID_POST_RELATION(400, "P2", "잘못된 요청 입니다"),
+  POST_DELETED_NOT_FOUND(404, "P3", "삭제된 포스트라 존재하지 않습니다"),
+
   // comment
   COMMENT_NOT_FOUND(404, "CM1", "해당 댓글이 존재하지 않습니다"),
   INVALID_COMMENT_RELATION(400, "CM2", "잘못된 요청입니다"),
