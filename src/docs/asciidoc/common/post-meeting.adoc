@@ -1,0 +1,5 @@
+:doctype: book
+:icons: font
+
+[[post-meeting]]
+operation::sample-enums-response[snippets='custom-response-fields-postMeeting']
