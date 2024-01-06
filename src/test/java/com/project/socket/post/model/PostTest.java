@@ -127,5 +127,13 @@ class PostTest {
     });
   }
 
+  @Test
+  void post의_postStatus를_DELETED로_변경한다() {
+    Post post = Post.builder().id(1L).postStatus(PostStatus.CREATED).build();
+
+    post.changeStatusToDeleted();
+
+    assertThat(post.getPostStatus()).isEqualTo(PostStatus.DELETED);
+  }
 
 }
