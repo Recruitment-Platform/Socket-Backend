@@ -13,5 +13,9 @@ operation::modifyPost[snippets='http-request,path-parameters,request-headers,req
 
 operation::getSinglePost[snippets='http-request,path-parameters,http-response,response-body,response-fields']
 
+[[delete-post]]
+=== 포스트 삭제
+
+operation::deletePost[snippets='http-request,path-parameters,request-headers,http-response']
 
 
