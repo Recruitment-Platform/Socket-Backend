@@ -100,5 +100,7 @@ public class Post extends BaseTime {
 
   }
 
-
+  public void changeStatusToDeleted() {
+    this.postStatus = PostStatus.DELETED;
+  }
 }
