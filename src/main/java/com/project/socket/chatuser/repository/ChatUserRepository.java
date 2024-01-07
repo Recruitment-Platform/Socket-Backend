@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ChatUserRepository {
 
-  private final static String CHAT_PARTICIPANT = "chat_participant:";
-  private final static String DESTINATION = "destination";
+  private static final String CHAT_PARTICIPANT = "chat_participant:";
+  private static final String DESTINATION = "destination";
   private final RedisTemplate<String, Object> redisTemplate;
 
   public void save(String sessionId, String username) {
