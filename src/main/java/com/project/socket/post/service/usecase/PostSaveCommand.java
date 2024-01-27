@@ -5,14 +5,15 @@ import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostStatus;
 import com.project.socket.post.model.PostType;
 import com.project.socket.user.model.User;
+import java.util.List;
 
 public record PostSaveCommand(
     String title,
     String postContent,
     PostType postType,
     PostMeeting postMeeting,
-    Long userId
-
+    Long userId,
+    List<String> skillNames
 ) {
 
   public Post toEntity(User user) {
