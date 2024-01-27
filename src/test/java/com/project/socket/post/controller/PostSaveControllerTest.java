@@ -27,6 +27,8 @@ import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostType;
 import com.project.socket.post.service.usecase.PostSaveUseCase;
 import com.project.socket.user.exception.UserNotFoundException;
+import java.util.Collections;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,7 +57,7 @@ class PostSaveControllerTest {
   void 요청이_유효하면_201_응답을_한다() throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto("title", "content", PostType.PROJECT,
-        PostMeeting.ONLINE);
+        PostMeeting.ONLINE, List.of("Java"));
 
     when(postSaveUseCase.createPost(any())).thenReturn(Post.builder().id(1L).build());
 
@@ -86,22 +88,42 @@ class PostSaveControllerTest {
                         .attributes(RestDocsAttributeFactory.constraintsField("널 x, 공백 x")),
                     fieldWithPath("postMeeting")
                         .type(JsonFieldType.STRING).description("ONLINE/OFFLINE/ON_OFFLINE")
-                        .attributes(RestDocsAttributeFactory.constraintsField("널 x, 공백 x"))
+                        .attributes(RestDocsAttributeFactory.constraintsField("널 x, 공백 x")),
+                    fieldWithPath("skillNames")
+                        .type(JsonFieldType.ARRAY)
+                        .description("기술 스택들 String 타입으로 입력 받고, 이를 합쳐서 List로 반환")
+                        .attributes(RestDocsAttributeFactory.constraintsField("널 o"))
                 ),
                 responseHeaders(
                     headerWithName("Location").description("생성된 게시물 경로")
                 )
             )
         );
+  }
 
+  @Test
+  @WithMockUser(username = "1", authorities = "ROLE_USER")
+  void 입력된_태그값_없이_요청이_유효하면_201_응답을_한다() throws Exception {
+    PostSaveRequestDto requestBody = new PostSaveRequestDto("title", "content", PostType.PROJECT,
+        PostMeeting.ONLINE, Collections.emptyList());
 
+    when(postSaveUseCase.createPost(any())).thenReturn(Post.builder().id(1L).build());
+
+    mockMvc.perform(post("/posts")
+            .header("Authorization", "Bearer access-token")
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestBody)))
+        .andExpectAll(
+            status().isCreated(),
+            header().string("Location", containsString("posts/1"))
+        );
   }
 
   @Test
   @WithMockUser(username = "1", authorities = "ROLE_USER")
   void UserNotFoundException_예외가_발생하면_404_응답을_한다() throws Exception {
     PostSaveRequestDto requestBody = new PostSaveRequestDto("testTitle", "testContent",
-        PostType.PROJECT, PostMeeting.ONLINE);
+        PostType.PROJECT, PostMeeting.ONLINE, List.of("Java"));
 
     Assertions.assertThat(requestBody.title()).isEqualTo("testTitle");
     when(postSaveUseCase.createPost(any())).thenThrow(new UserNotFoundException(1L));
@@ -120,8 +142,7 @@ class PostSaveControllerTest {
   void PostSaveRequestDto_title_not_valid(String title) throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto(title, "test_postContent",
-        PostType.PROJECT,
-        PostMeeting.ONLINE);
+        PostType.PROJECT, PostMeeting.ONLINE, List.of("Java"));
 
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
@@ -137,7 +158,7 @@ class PostSaveControllerTest {
   void PostSaveRequestDto_postContent_not_valid(String postContent) throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", postContent,
-        PostType.PROJECT, PostMeeting.ONLINE);
+        PostType.PROJECT, PostMeeting.ONLINE, List.of("Java"));
 
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
@@ -151,7 +172,7 @@ class PostSaveControllerTest {
   void PostSaveRequestDto_postType_not_valid_400_응답을_한다() throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", "test_postContent",
-        null, PostMeeting.ONLINE);
+        null, PostMeeting.ONLINE, List.of("Java"));
 
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
@@ -165,7 +186,7 @@ class PostSaveControllerTest {
   void PostSaveRequestDto_postMeeting_not_valid_400_응답을_한다() throws Exception {
 
     PostSaveRequestDto requestBody = new PostSaveRequestDto("test_title", "test_postContent",
-        PostType.PROJECT, null);
+        PostType.PROJECT, null, List.of("Java"));
 
     mockMvc.perform(post("/posts")
             .contentType(APPLICATION_JSON)
