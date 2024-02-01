@@ -22,10 +22,8 @@ jobs:
           keys:
             - v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
-          command: ./gradlew dependencies
-      - run:
           name: run build and test
-          command: ./gradlew build -i
+          command: ./gradlew build
       - run:
           name: send report sonarqube
           command: ./gradlew sonar
