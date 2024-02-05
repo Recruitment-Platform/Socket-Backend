@@ -16,6 +16,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,6 @@ public class PostSaveService implements PostSaveUseCase {
   }
 
   //태그와 게시물 맵핑
-  @Transactional
   @Override
   public void mapPostWithSkill(Post post, List<String> skillNames) {
     // 게시물과 같이 입력된 해시태그(skill)가 존재할 경우 불러 오고, 존재하지 않을 경우 저장
@@ -71,7 +71,7 @@ public class PostSaveService implements PostSaveUseCase {
   }
 
   private boolean isEmptyTag(PostSaveCommand postSaveInfo) {
-    return postSaveInfo.skillNames().isEmpty();
+    return ObjectUtils.isEmpty(postSaveInfo.skillNames());
   }
 
   private User findUser(Long userId) {
