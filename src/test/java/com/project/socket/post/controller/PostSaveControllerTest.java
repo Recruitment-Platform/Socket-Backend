@@ -27,7 +27,6 @@ import com.project.socket.post.model.PostMeeting;
 import com.project.socket.post.model.PostType;
 import com.project.socket.post.service.usecase.PostSaveUseCase;
 import com.project.socket.user.exception.UserNotFoundException;
-import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -101,11 +100,13 @@ class PostSaveControllerTest {
         );
   }
 
-  @Test
+  @ParameterizedTest(name = "skillNames가_{0}이면_201_응답을_한다")
+  @NullAndEmptySource
   @WithMockUser(username = "1", authorities = "ROLE_USER")
-  void 입력된_태그값_없이_요청이_유효하면_201_응답을_한다() throws Exception {
+  void PostSaveRequestDto_skillNames_is_valid_with_Null_and_Empty(List<String> skillNames)
+      throws Exception {
     PostSaveRequestDto requestBody = new PostSaveRequestDto("title", "content", PostType.PROJECT,
-        PostMeeting.ONLINE, Collections.emptyList());
+        PostMeeting.ONLINE, skillNames);
 
     when(postSaveUseCase.createPost(any())).thenReturn(Post.builder().id(1L).build());
 

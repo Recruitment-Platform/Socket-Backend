@@ -73,11 +73,6 @@ class PostSaveServiceTest {
         List.of("Java"));
   }
 
-  PostSaveCommand createPostWithNoTag() {
-    return new PostSaveCommand("테스트 제목", "테스트 내용", PostType.PROJECT,
-        PostMeeting.ONLINE, 1L, Collections.emptyList());
-  }
-
   @Test
   void id에_해당하는_유저가_없으면_UserNotFoundException_예외가_발생한다() {
     PostSaveCommand postNew = createPost();
@@ -91,21 +86,51 @@ class PostSaveServiceTest {
   }
 
   @Test
-  void 유저가_존재하고_태그값이_없을경우_Post를_생성한다() {
-    PostSaveCommand postNewWithNoTag = createPostWithNoTag();
+  void 유저가_존재하고_skillNames가_빈_배열일_경우_Post를_생성한다() {
+    PostSaveCommand postNewWithEmptyTag = new PostSaveCommand("테스트 제목", "테스트 내용", PostType.PROJECT,
+        PostMeeting.ONLINE, 1L, Collections.emptyList());
+
     User writer = User.builder().userId(1L).build();
 
     Post post = Post.builder().id(1L)
-        .title(postNewWithNoTag.title())
-        .postContent(postNewWithNoTag.postContent())
-        .postType(postNewWithNoTag.postType())
-        .postMeeting(postNewWithNoTag.postMeeting())
+        .title(postNewWithEmptyTag.title())
+        .postContent(postNewWithEmptyTag.postContent())
+        .postType(postNewWithEmptyTag.postType())
+        .postMeeting(postNewWithEmptyTag.postMeeting())
         .build();
 
     when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(writer));
     when(postJpaRepository.save(any())).thenReturn(post);
 
-    Post savedPost = postSaveService.createPost(postNewWithNoTag);
+    Post savedPost = postSaveService.createPost(postNewWithEmptyTag);
+
+    verify(postJpaRepository).save(postCaptor.capture());
+    Post capturePost = postCaptor.getValue();
+
+    assertAll(
+        () -> assertThat(savedPost.getId()).isEqualTo(1L),
+        () -> assertThat(capturePost.getPostStatus()).isEqualTo(PostStatus.CREATED)
+    );
+  }
+
+  @Test
+  void 유저가_존재하고_skillNames가_null_일경우_Post를_생성한다() {
+    PostSaveCommand postNewWithNullTag = new PostSaveCommand("테스트 제목", "테스트 내용", PostType.PROJECT,
+        PostMeeting.ONLINE, 1L, null);
+
+    User writer = User.builder().userId(1L).build();
+
+    Post post = Post.builder().id(1L)
+        .title(postNewWithNullTag.title())
+        .postContent(postNewWithNullTag.postContent())
+        .postType(postNewWithNullTag.postType())
+        .postMeeting(postNewWithNullTag.postMeeting())
+        .build();
+
+    when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(writer));
+    when(postJpaRepository.save(any())).thenReturn(post);
+
+    Post savedPost = postSaveService.createPost(postNewWithNullTag);
 
     verify(postJpaRepository).save(postCaptor.capture());
     Post capturePost = postCaptor.getValue();
