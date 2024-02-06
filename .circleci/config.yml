@@ -9,7 +9,7 @@ orbs:
 executors:
   linux:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2004:2023.07.1
       docker_layer_caching: true
 
 
@@ -19,13 +19,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+          keys:
+            - v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: run build and test
-          command: gradle clean build
+          command: ./gradlew build
       - run:
           name: send report sonarqube
-          command: gradle sonar
+          command: ./gradlew sonar
       - save_cache:
           paths:
             - ~/.gradle/caches

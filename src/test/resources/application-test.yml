@@ -35,7 +35,7 @@ spring:
       replace: none
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8:///socket
+    url: jdbc:tc:mysql:8.0.36:///socket
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
