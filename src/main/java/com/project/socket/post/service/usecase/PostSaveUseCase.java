@@ -1,12 +1,11 @@
 package com.project.socket.post.service.usecase;
 
 import com.project.socket.post.model.Post;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 public interface PostSaveUseCase {
 
-  @Transactional
   Post createPost(PostSaveCommand postSaveInfo);
 
-
+  void mapPostWithSkill(Post post, List<String> skillNames);
 }

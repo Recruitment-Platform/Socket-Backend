@@ -3,6 +3,7 @@ package com.project.socket.post.controller;
 import com.project.socket.post.controller.dto.request.PostSaveRequestDto;
 import com.project.socket.post.model.Post;
 import com.project.socket.post.service.usecase.PostSaveUseCase;
+import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class PostSaveController {
 
   @PostMapping("/posts")
   public ResponseEntity<Object> postSave(
-      @RequestBody @Validated PostSaveRequestDto postSaveRequestDto,
+      @RequestBody @Valid PostSaveRequestDto postSaveRequestDto,
       @AuthenticationPrincipal UserDetails userDetails) { //사용자 입력 정보
 
     long userId = Long.parseLong(userDetails.getUsername());
