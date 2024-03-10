@@ -49,4 +49,8 @@ public class ChatMessage extends BaseCreatedTime {
     this.content = content;
     this.readCount = readCount;
   }
+
+  public void toRead(){
+    this.readCount = 0;
+  }
 }
