@@ -87,7 +87,7 @@ class ChatUserRepositoryTest extends ContainerBaseTest {
 
     String result = chatUserRepository.findDestinationById(1L);
 
-    assertThat(result).isEqualTo(result);
+    assertThat(result).isEqualTo(destination);
   }
 
   @Test
