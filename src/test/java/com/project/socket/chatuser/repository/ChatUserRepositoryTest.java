@@ -80,4 +80,20 @@ class ChatUserRepositoryTest extends ContainerBaseTest {
     assertThat(removedUsername).isNull();
   }
 
+  @Test
+  void 유저의_구독_위치를_반환한다() {
+    String destination = "/sub/rooms/1";
+    chatUserRepository.subscribe("1", destination);
+
+    String result = chatUserRepository.findDestinationById(1L);
+
+    assertThat(result).isEqualTo(destination);
+  }
+
+  @Test
+  void 유저의_구독정보가_없으면_null을_반환한다() {
+    String result = chatUserRepository.findDestinationById(1L);
+
+    assertThat(result).isNull();
+  }
 }
