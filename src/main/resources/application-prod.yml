@@ -32,3 +32,9 @@ server:
 
 jwt:
   secret: ${JWT.KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info, metrics, prometheus"
