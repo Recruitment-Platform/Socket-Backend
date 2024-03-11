@@ -17,3 +17,9 @@ logging:
 
 jwt:
   secret: socket-secret-key-for-local-please
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info, metrics, prometheus"

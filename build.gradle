@@ -57,6 +57,9 @@ dependencies {
     //STOMP
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    // Prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
