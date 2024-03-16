@@ -1,40 +1,30 @@
 version: 2.1
 
 orbs:
+  gradle: circleci/gradle@3.0.0
+  tcc: atomicjar/testcontainers-cloud-orb@0.1.0
   slack: circleci/slack@4.4.4
   aws-cli: circleci/aws-cli@4.0
   aws-ecr: circleci/aws-ecr@9.0.0
 
 
 executors:
-  linux:
-    machine:
-      image: ubuntu-2004:2023.07.1
-      docker_layer_caching: true
+  jdk17:
+    docker:
+      - image: cimg/openjdk:17.0.8
 
 
 jobs:
   build-test:
-    executor: linux
+    executor: jdk17
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: run build and test
-          command: ./gradlew build
+          command: gradle build
       - run:
           name: send report sonarqube
-          command: ./gradlew sonar
-      - save_cache:
-          paths:
-            - ~/.gradle/caches
-          key: v1-gradle-cache-{{ checksum "build.gradle" }}
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
+          command: gradle sonar
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -43,10 +33,9 @@ jobs:
           template: basic_success_1
 
   deploy:
-    executor: linux
+    executor: jdk17
     steps:
-      - attach_workspace:
-          at: .
+      - checkout
       - run:
           name: set short sha
           command: |
@@ -74,6 +63,8 @@ workflows:
   build-and-deploy:
     jobs:
       - build-test:
+          pre-steps:
+            - tcc/setup
           context:
             - slack-secret
             - prod-deploy
