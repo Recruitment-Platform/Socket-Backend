@@ -18,12 +18,23 @@ jobs:
     executor: linux
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: run build and test
-          command: gradle build
+          command: ./gradlew build
       - run:
           name: send report sonarqube
-          command: gradle sonar
+          command: ./gradlew sonar
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -34,10 +45,8 @@ jobs:
   deploy:
     executor: linux
     steps:
-      - checkout
-      - run:
-          name: run build and test
-          command: gradle build
+      - attach_workspace:
+          at: .
       - run:
           name: set short sha
           command: |
