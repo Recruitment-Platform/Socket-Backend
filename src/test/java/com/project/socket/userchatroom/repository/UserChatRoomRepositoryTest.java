@@ -49,6 +49,7 @@ class UserChatRoomRepositoryTest {
     userChatRoomRepository.updateUnreadCount(1L, 1L);
 
     UserChatRoom userChatRoom = userChatRoomRepository.findById(1L).get();
-    assertThat(userChatRoom.getUnreadCount()).isEqualTo(1);
+    short expect = 1;
+    assertThat(userChatRoom.getUnreadCount()).isEqualTo(expect);
   }
 }
