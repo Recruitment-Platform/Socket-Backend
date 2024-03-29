@@ -42,4 +42,13 @@ class UserChatRoomRepositoryTest {
     UserChatRoom userChatRoom = userChatRoomRepository.findByUserIdAndPostId(1L, 1L);
     assertThat(userChatRoom).isNotNull();
   }
+
+  @Test
+  @Sql("updateUnreadCount.sql")
+  void 안읽음_개수를_증가시킨다 () {
+    userChatRoomRepository.updateUnreadCount(1L, 1L);
+
+    UserChatRoom userChatRoom = userChatRoomRepository.findById(1L).get();
+    assertThat(userChatRoom.getUnreadCount()).isEqualTo(1);
+  }
 }
