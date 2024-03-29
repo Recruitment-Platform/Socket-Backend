@@ -1,0 +1,2 @@
+ALTER TABLE user_chat_room
+    ADD COLUMN unread_count SMALLINT NOT NULL DEFAULT 0;

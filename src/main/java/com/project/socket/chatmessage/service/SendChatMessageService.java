@@ -11,9 +11,11 @@ import com.project.socket.chatuser.repository.ChatUserRepository;
 import com.project.socket.user.exception.UserNotFoundException;
 import com.project.socket.user.model.User;
 import com.project.socket.user.repository.UserJpaRepository;
+import com.project.socket.userchatroom.repository.UserChatRoomRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +25,10 @@ public class SendChatMessageService implements SendChatMessageUseCase {
   private final ChatRoomRepository chatRoomRepository;
   private final UserJpaRepository userJpaRepository;
   private final ChatUserRepository chatUserRepository;
+  private final UserChatRoomRepository userChatRoomRepository;
 
   @Override
+  @Transactional
   public ChatMessage sendChatMessage(SendChatMessageCommand command) {
     ChatRoom chatRoom = findChatRoom(command.chatRoomId());
     User sender = findSender(command.senderId());
@@ -35,6 +39,8 @@ public class SendChatMessageService implements SendChatMessageUseCase {
 
     if (isReceiverInTheRoom(command.receiverId(), command.chatRoomId())) {
       chatMessage.toRead();
+    } else {
+      userChatRoomRepository.updateUnreadCount(command.receiverId(), command.chatRoomId());
     }
 
     return chatMessageRepository.save(chatMessage);

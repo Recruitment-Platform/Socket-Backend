@@ -1,8 +1,6 @@
 package com.project.socket.config;
 
-import com.querydsl.jpa.DefaultQueryHandler;
-import com.querydsl.jpa.Hibernate5Templates;
-import com.querydsl.jpa.QueryHandler;
+import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,15 +15,6 @@ public class QuerydslConfig {
 
   @Bean
   public JPAQueryFactory jpaQueryFactory() {
-    return new JPAQueryFactory(new CustomHibernate5Templates(), entityManager);
+    return new JPAQueryFactory(JPQLTemplates.DEFAULT, entityManager);
   }
-
-  public static class CustomHibernate5Templates extends Hibernate5Templates {
-
-    @Override
-    public QueryHandler getQueryHandler() {
-      return DefaultQueryHandler.DEFAULT;
-    }
-  }
-
 }

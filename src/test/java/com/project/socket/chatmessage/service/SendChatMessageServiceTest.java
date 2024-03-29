@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -18,6 +21,7 @@ import com.project.socket.chatuser.repository.ChatUserRepository;
 import com.project.socket.user.exception.UserNotFoundException;
 import com.project.socket.user.model.User;
 import com.project.socket.user.repository.UserJpaRepository;
+import com.project.socket.userchatroom.repository.UserChatRoomRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -44,6 +48,9 @@ class SendChatMessageServiceTest {
 
   @Mock
   ChatUserRepository chatUserRepository;
+
+  @Mock
+  UserChatRoomRepository userChatRoomRepository;
 
   @InjectMocks
   SendChatMessageService sendChatMessageService;
@@ -91,7 +98,8 @@ class SendChatMessageServiceTest {
     assertAll(
         () -> assertThat(savedChatMessage.getChatMessageId()).isEqualTo(
             chatMessage.getChatMessageId()),
-        () -> assertThat(captureChatMessage.getReadCount()).isZero()
+        () -> assertThat(captureChatMessage.getReadCount()).isZero(),
+        () -> verify(userChatRoomRepository, never()).updateUnreadCount(anyLong(), anyLong())
     );
   }
 
@@ -108,6 +116,7 @@ class SendChatMessageServiceTest {
     when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(sender));
     when(chatUserRepository.findDestinationById(anyLong())).thenReturn(receiverDestination);
     when(chatMessageRepository.save(any())).thenReturn(chatMessage);
+    doNothing().when(userChatRoomRepository).updateUnreadCount(anyLong(),anyLong());
 
     ChatMessage savedChatMessage = sendChatMessageService.sendChatMessage(command);
 
@@ -117,8 +126,10 @@ class SendChatMessageServiceTest {
     assertAll(
         () -> assertThat(savedChatMessage.getChatMessageId()).isEqualTo(
             chatMessage.getChatMessageId()),
-        () -> assertThat(captureChatMessage.getReadCount()).isEqualTo(1)
+        () -> assertThat(captureChatMessage.getReadCount()).isEqualTo(1),
+        () -> verify(userChatRoomRepository, times(1)).updateUnreadCount(anyLong(), anyLong())
     );
+
   }
 
   @Test
@@ -133,6 +144,7 @@ class SendChatMessageServiceTest {
     when(userJpaRepository.findById(anyLong())).thenReturn(Optional.of(sender));
     when(chatUserRepository.findDestinationById(anyLong())).thenReturn(null);
     when(chatMessageRepository.save(any())).thenReturn(chatMessage);
+    doNothing().when(userChatRoomRepository).updateUnreadCount(anyLong(),anyLong());
 
     ChatMessage savedChatMessage = sendChatMessageService.sendChatMessage(command);
 
@@ -142,7 +154,8 @@ class SendChatMessageServiceTest {
     assertAll(
         () -> assertThat(savedChatMessage.getChatMessageId()).isEqualTo(
             chatMessage.getChatMessageId()),
-        () -> assertThat(captureChatMessage.getReadCount()).isEqualTo(1)
+        () -> assertThat(captureChatMessage.getReadCount()).isEqualTo(1),
+        () -> verify(userChatRoomRepository, times(1)).updateUnreadCount(anyLong(), anyLong())
     );
   }
 }
