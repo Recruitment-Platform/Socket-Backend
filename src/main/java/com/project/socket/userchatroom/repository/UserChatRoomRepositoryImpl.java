@@ -28,16 +28,9 @@ public class UserChatRoomRepositoryImpl implements UserChatRoomRepositoryCustom 
   @Override
   public void updateUnreadCount(Long userId, Long chatRoomId) {
     jpaQueryFactory.update(userChatRoom)
-        .set(userChatRoom.unreadCount, userChatRoom.unreadCount.add(1))
-        .where(eqUserId(userId).and(eqChatRoomId(chatRoomId)))
-        .execute();
-  }
-
-  private BooleanExpression eqChatRoomId(Long chatRoomId) {
-    return chatRoomId != null ? userChatRoom.chatRoom.chatRoomId.eq(chatRoomId) : null;
-  }
-
-  private BooleanExpression eqUserId(Long userId) {
-    return userId != null ? userChatRoom.user.userId.eq(userId) : null;
+                   .set(userChatRoom.unreadCount, userChatRoom.unreadCount.add(1))
+                   .where(userChatRoom.user.userId.eq(userId).and(
+                       userChatRoom.chatRoom.chatRoomId.eq(chatRoomId)))
+                   .execute();
   }
 }
