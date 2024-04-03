@@ -1,0 +1,5 @@
+[[get-all-post-skill]]
+=== 포스트 태그 게시물 조회
+
+operation::getAllPostsOfSkill[snippets='http-request,query-parameters,http-response,response-body,response-fields']
+
