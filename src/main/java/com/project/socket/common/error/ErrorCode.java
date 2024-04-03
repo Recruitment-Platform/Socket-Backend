@@ -26,6 +26,12 @@ public enum ErrorCode {
   COMMENT_NOT_FOUND(404, "CM1", "해당 댓글이 존재하지 않습니다"),
   INVALID_COMMENT_RELATION(400, "CM2", "잘못된 요청입니다"),
 
+  // Post Skill
+  UnsupportedSortException(400, "P4", "지원하지 않는 정렬조건 입니다"),
+
+  // skill
+  SKILL_NOT_FOUND(404, "S1", "해당 태그와 관련된 게시물이 존재하지 않습니다"),
+
   /**
    * ChatRoom 관련 에러 코드
    */
