@@ -23,10 +23,10 @@ jobs:
             - v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: run build and test
-          command: ./gradlew build
+          command: gradle build
       - run:
           name: send report sonarqube
-          command: ./gradlew sonar
+          command: gradle sonar
       - save_cache:
           paths:
             - ~/.gradle/caches
@@ -89,6 +89,3 @@ workflows:
             branches:
               only:
                 - main
-          
-
-

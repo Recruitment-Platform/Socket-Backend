@@ -22,9 +22,8 @@ spring:
 
 logging:
   level:
-    org.springframework.security: trace
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    org.springframework.security: info
+    com.zaxxer.hikari: debug
 
 server:
   shutdown: graceful
@@ -32,3 +31,9 @@ server:
 
 jwt:
   secret: ${JWT.KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info, metrics, prometheus"

@@ -25,6 +25,10 @@ public class ChatUserRepository {
                  .put(CHAT_PARTICIPANT + username, DESTINATION, destination);
   }
 
+  public String findDestinationById(Long userId) {
+    return (String) redisTemplate.opsForHash().get(CHAT_PARTICIPANT + userId, DESTINATION);
+  }
+
   public void unsubscribe(String username) {
     redisTemplate.opsForHash().delete(CHAT_PARTICIPANT + username, DESTINATION);
   }

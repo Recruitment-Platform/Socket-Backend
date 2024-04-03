@@ -2,6 +2,7 @@ package com.project.socket.userchatroom.model;
 
 import com.project.socket.chatroom.model.ChatRoom;
 import com.project.socket.user.model.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +39,9 @@ public class UserChatRoom {
   @Enumerated(EnumType.STRING)
   private UserChatRoomStatus userChatRoomStatus;
 
+  @Column
+  private short unreadCount;
+
   public void enter() {
     if (isExit()) {
       this.userChatRoomStatus = UserChatRoomStatus.ENTER;
@@ -50,10 +54,11 @@ public class UserChatRoom {
 
   @Builder
   public UserChatRoom(Long userChatRoomId, User user, ChatRoom chatRoom,
-      UserChatRoomStatus userChatRoomStatus) {
+      UserChatRoomStatus userChatRoomStatus, short unreadCount) {
     this.userChatRoomId = userChatRoomId;
     this.user = user;
     this.chatRoom = chatRoom;
     this.userChatRoomStatus = userChatRoomStatus;
+    this.unreadCount = unreadCount;
   }
 }

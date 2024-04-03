@@ -12,8 +12,13 @@ spring:
 logging:
   level:
     org.springframework.security: trace
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: debug
 
 jwt:
   secret: socket-secret-key-for-local-please
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info, metrics, prometheus"

@@ -29,6 +29,7 @@ public class CookieUtils {
       int maxAge) {
     Cookie cookie = new Cookie(name, value);
     cookie.setPath("/");
+    cookie.setSecure(true);
     cookie.setHttpOnly(true);
     cookie.setMaxAge(maxAge);
     response.addCookie(cookie);
