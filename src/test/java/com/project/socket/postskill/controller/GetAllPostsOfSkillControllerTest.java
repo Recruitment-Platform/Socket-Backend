@@ -68,7 +68,7 @@ class GetAllPostsOfSkillControllerTest {
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(hashTag),
         any(Pageable.class))).thenReturn(postDtoPage);
 
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("hashtag", hashTag)
             .param("page", String.valueOf(page))
             .param("order", order))
@@ -134,7 +134,7 @@ class GetAllPostsOfSkillControllerTest {
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(null), any(Pageable.class)))
         .thenReturn(new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size()));
 
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("page", String.valueOf(page))
             .param("order", order))
         .andExpect(status().isOk());
@@ -148,7 +148,7 @@ class GetAllPostsOfSkillControllerTest {
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(""), any(Pageable.class)))
         .thenReturn(new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size()));
 
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("hashtag", "")
             .param("page", String.valueOf(page))
             .param("order", order))
@@ -157,7 +157,7 @@ class GetAllPostsOfSkillControllerTest {
 
   @Test
   void 페이징의_page_parameter가_0보다_작으면_400_응답을_한다() throws Exception {
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("hashtag", hashTag)
             .param("page", String.valueOf(-1))
             .param("order", "createdAt"))
@@ -172,7 +172,7 @@ class GetAllPostsOfSkillControllerTest {
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyString(), any(Pageable.class)))
         .thenReturn(new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size()));
 
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("hashtag", hashTag)
             .param("page", String.valueOf(page)))
         .andExpect(status().isOk());
@@ -183,7 +183,7 @@ class GetAllPostsOfSkillControllerTest {
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyString(), any(Pageable.class))).thenThrow(
         new UnsupportedSortException());
 
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("hashtag", hashTag)
             .param("page", String.valueOf(page))
             .param("order", "wrongOrder"))
@@ -196,7 +196,7 @@ class GetAllPostsOfSkillControllerTest {
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyString(), any(Pageable.class))).thenThrow(
         new SkillNotFoundException());
 
-    mockMvc.perform(get("/posts")
+    mockMvc.perform(get("/posts/projects")
             .param("hashtag", hashTag)
             .param("page", String.valueOf(page))
             .param("order", order))
