@@ -22,7 +22,7 @@ public class GetAllPostsOfSkillController {
 
   private final GetAllPostsOfSkillUseCase getAllPostsOfSkillUseCase;
 
-  @GetMapping("/posts")
+  @GetMapping("/posts/projects")
   public ResponseEntity<Object> getAllPostsByHashTag(
       @RequestParam(required = false) String hashtag,
       @RequestParam(name = "page", defaultValue = "0") @Min(0) int page,
