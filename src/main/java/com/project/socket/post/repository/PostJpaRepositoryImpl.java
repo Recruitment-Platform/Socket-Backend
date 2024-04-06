@@ -3,7 +3,6 @@ package com.project.socket.post.repository;
 import static com.project.socket.post.model.QPost.post;
 import static com.project.socket.user.model.QUser.user;
 
-import com.project.socket.post.model.Post;
 import com.project.socket.post.service.usecase.PostDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -15,9 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -51,7 +49,8 @@ public class PostJpaRepositoryImpl implements PostJpaRepositoryCustom {
 
   @Transactional(readOnly = true)
   @Override
-  public Page<PostDto> getPostsByHashTag(HashSet<Long> idList, Pageable pageable, OrderSpecifier<?> orderSpecifier) {
+  public Page<PostDto> getPostsByHashTag(HashSet<Long> idList, Pageable pageable,
+      OrderSpecifier<?> orderSpecifier) {
 
     List<PostDto> content = jpaQueryFactory
         .select(Projections.fields(PostDto.class,
@@ -72,15 +71,13 @@ public class PostJpaRepositoryImpl implements PostJpaRepositoryCustom {
         .limit(pageable.getPageSize())
         .fetch();
 
-    JPAQuery<Post> query = jpaQueryFactory
-        .select(post)
+    JPAQuery<Long> countQuery = jpaQueryFactory
+        .select(post.count())
         .from(post)
         .join(post.user, user)
-        .where(post.id.in(idList));
+        .where(isEmptyPostId(idList));
 
-    int count = query.fetch().size();
-
-    return new PageImpl<>(content, pageable, count);
+    return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
   }
 
   private BooleanExpression isEmptyPostId(HashSet<Long> idList) {
