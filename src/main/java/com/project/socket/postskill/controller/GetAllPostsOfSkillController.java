@@ -24,12 +24,12 @@ public class GetAllPostsOfSkillController {
 
   @GetMapping("/posts/projects")
   public ResponseEntity<Object> getAllPostsByHashTag(
-      @RequestParam(required = false) String hashtag,
-      @RequestParam(name = "page", defaultValue = "0") @Min(0) int page,
-      @RequestParam(name = "order", defaultValue = "createdAt") String order
+      @RequestParam(name = "hashtag", required = false) String hashtag,
+      @RequestParam(name = "page", required = false, defaultValue = "0") @Min(0) int page,
+      @RequestParam(name = "order", required = false, defaultValue = "createdAt") String order
   ) {
 
-    int size = 5;
+    int size = 10;
 
     Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, order);
 
