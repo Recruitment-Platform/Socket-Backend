@@ -18,13 +18,21 @@ class ChatMessageRepositoryTest {
 
   @Test
   @Sql("chatMessageTest.sql")
-  void ChatMessage_엔티티를_저장하고_반환한다(){
+  void ChatMessage_엔티티를_저장하고_반환한다() {
     ChatMessage chatMessage = ChatMessage.builder().sender(User.builder().userId(1L).build())
-                                .chatRoom(ChatRoom.builder().chatRoomId(1L).build()).content("hi")
-                                .build();
+                                         .chatRoom(ChatRoom.builder().chatRoomId(1L).build())
+                                         .content("hi")
+                                         .build();
 
     ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
 
     assertThat(savedChatMessage.getChatMessageId()).isNotNull();
+  }
+
+  @Test
+  @Sql("updateAllUnreadMessages.sql")
+  void 조건에_해당하는_메시지들의_안읽음_카운트를_감소시킨다() {
+    long count = chatMessageRepository.updateAllUnreadMessages(1L, 2L);
+    assertThat(count).isEqualTo(3L);
   }
 }
