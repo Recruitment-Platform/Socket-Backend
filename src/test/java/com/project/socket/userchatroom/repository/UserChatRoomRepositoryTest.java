@@ -7,6 +7,8 @@ import com.project.socket.common.annotation.CustomDataJpaTest;
 import com.project.socket.user.model.User;
 import com.project.socket.userchatroom.model.UserChatRoom;
 import com.project.socket.userchatroom.model.UserChatRoomStatus;
+import jakarta.persistence.EntityManager;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -16,6 +18,9 @@ class UserChatRoomRepositoryTest {
 
   @Autowired
   UserChatRoomRepository userChatRoomRepository;
+
+  @Autowired
+  EntityManager em;
 
   @Test
   @Sql("saveUserChatRoom.sql")
@@ -45,11 +50,41 @@ class UserChatRoomRepositoryTest {
 
   @Test
   @Sql("updateUnreadCount.sql")
-  void 안읽음_개수를_증가시킨다 () {
+  void 안읽음_개수를_증가시킨다() {
     userChatRoomRepository.updateUnreadCount(1L, 1L);
 
     UserChatRoom userChatRoom = userChatRoomRepository.findById(1L).get();
     short expect = 1;
     assertThat(userChatRoom.getUnreadCount()).isEqualTo(expect);
+  }
+
+  @Test
+  @Sql("findByUserChatRoomId.sql")
+  void userChatRoomId_에_해당하는_데이터를_반환한다() {
+    Optional<UserChatRoom> userChatRoom = userChatRoomRepository.findById(1L);
+
+    assertThat(userChatRoom).isPresent();
+  }
+
+  @Test
+  @Sql("findByUserChatRoomId.sql")
+  void userChatRoomId_에_해당하는_데이터가_없으면_빈_Optional을_반환한다() {
+    Optional<UserChatRoom> userChatRoom = userChatRoomRepository.findById(2L);
+
+    assertThat(userChatRoom).isNotPresent();
+  }
+
+  @Test
+  @Sql("updateUnreadCountToZero.sql")
+  void 안읽음_개수를_0으로_변경한다() {
+    UserChatRoom userChatRoom = userChatRoomRepository.findById(1L).get();
+    userChatRoom.enter();
+    em.flush();
+    em.clear();
+
+    UserChatRoom updatedUserChatRoom = userChatRoomRepository.findById(1L).get();
+
+    short expect = 0;
+    assertThat(updatedUserChatRoom.getUnreadCount()).isEqualTo(expect);
   }
 }
