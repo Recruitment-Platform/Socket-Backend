@@ -46,6 +46,12 @@ public class UserChatRoom {
     if (isExit()) {
       this.userChatRoomStatus = UserChatRoomStatus.ENTER;
     }
+
+    unreadCount = 0;
+  }
+
+  public boolean isSameUser(Long userId) {
+    return this.user.getUserId().equals(userId);
   }
 
   public boolean isExit() {
