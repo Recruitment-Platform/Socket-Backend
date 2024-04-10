@@ -21,6 +21,7 @@ import com.project.socket.skill.repository.SkillJpaRepository;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -52,98 +53,86 @@ class GetAllPostsOfSkillServiceTest {
   @Mock
   PostSkillJpaRepository postSkillJpaRepository;
 
-  private final List<String> hashTags = List.of("Java", "Spring");
-  private final List<Long> skillIds = List.of(1L, 2L);
+  private final List<Long> hashTagIds = List.of(1L, 2L);
 
-  private int page = 0;
-  private int size = 3;
-
-  Pageable pageable = PageRequest.of(page, size, Direction.DESC, "createdAt");
+  Pageable pageable = PageRequest.of(0, 3, Direction.DESC, "createdAt");
   OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(Order.DESC, post.createdAt);
   Page<PostDto> expectedPage = new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size());
 
 
   @Test
-  void skillName과_관련된_게시물이_있으면_성공적으로_조회한다() {
-    String skillName = "Java,Spring";
+  void hashTagIds와_관련된_게시물이_있으면_성공적으로_조회한다() {
+    // given
     HashSet<Long> allPostIdBySkill = new HashSet<>(List.of(1L, 2L, 3L));
 
-    // Stub
-    when(skillJpaRepository.findAllIdBySkillNames(anyList())).thenReturn(skillIds);
+    // when
     when(postSkillJpaRepository.findPostIdsBySkillIds(anyList())).thenReturn(allPostIdBySkill);
     when(postJpaRepository.getPostsByHashTag(any(), any(Pageable.class), any()))
         .thenReturn(expectedPage);
 
+    // then
     Page<PostDto> actualPosts
-        = getAllPostsOfSkillService.getPostsUsingSkill(skillName, pageable);
+        = getAllPostsOfSkillService.getPostsUsingSkill(hashTagIds, pageable);
 
     assertThat(expectedPage).isEqualTo(actualPosts);
-    verify(skillJpaRepository, times(1)).findAllIdBySkillNames(hashTags);
-    verify(postSkillJpaRepository, times(1)).findPostIdsBySkillIds(skillIds);
+    verify(postSkillJpaRepository, times(1)).findPostIdsBySkillIds(hashTagIds);
     verify(postJpaRepository, times(1))
         .getPostsByHashTag(allPostIdBySkill, pageable, orderSpecifier);
   }
 
 
   @Test
-  void skillName이_null_일_경우_모든_게시물을_페이징해서_조회한다() {
-    String skillName = null;
+  void hashTagIds가_빈_문자열_일경우_모든_게시물을_페이징해서_조회한다() {
+    List<Long> hashTagIds = Collections.EMPTY_LIST;
     HashSet<Long> allPostIdBySkill = new HashSet<>();
 
     when(postJpaRepository.getPostsByHashTag(any(), any(Pageable.class), any()))
         .thenReturn(expectedPage);
 
     Page<PostDto> actualPosts
-        = getAllPostsOfSkillService.getPostsUsingSkill(skillName, pageable);
+        = getAllPostsOfSkillService.getPostsUsingSkill(hashTagIds, pageable);
 
     assertThat(expectedPage).isEqualTo(actualPosts);
-    verify(skillJpaRepository, times(0)).findAllIdBySkillNames(hashTags);
-    verify(postSkillJpaRepository, times(0)).findPostIdsBySkillIds(skillIds);
+    verify(postSkillJpaRepository, times(0)).findPostIdsBySkillIds(hashTagIds);
     verify(postJpaRepository, times(1)).getPostsByHashTag(allPostIdBySkill, pageable,
         orderSpecifier);
   }
 
   @Test
-  void skillName이_빈_문자열_일경우_모든_게시물을_페이징해서_조회한다() {
-    String skillName = "";
+  void hashTagIds가_null_일_경우_모든_게시물을_페이징해서_조회한다() {
     HashSet<Long> allPostIdBySkill = new HashSet<>();
-    Page<PostDto> expectedPage =
-        new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size());
 
     when(postJpaRepository.getPostsByHashTag(any(), any(Pageable.class), any()))
         .thenReturn(expectedPage);
 
     Page<PostDto> actualPosts
-        = getAllPostsOfSkillService.getPostsUsingSkill(skillName, pageable);
+        = getAllPostsOfSkillService.getPostsUsingSkill(null, pageable);
 
     assertThat(expectedPage).isEqualTo(actualPosts);
-    verify(skillJpaRepository, times(0)).findAllIdBySkillNames(hashTags);
-    verify(postSkillJpaRepository, times(0)).findPostIdsBySkillIds(skillIds);
+    verify(postSkillJpaRepository, times(0)).findPostIdsBySkillIds(hashTagIds);
     verify(postJpaRepository, times(1)).getPostsByHashTag(allPostIdBySkill, pageable,
         orderSpecifier);
   }
 
   @Test
   void skillName_조회결과가_없으면_SkillNotFoundException_예외가_발생한다() {
-    String skillName = "Java";
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "createdAt");
+    HashSet<Long> allPostIdBySkill = new HashSet<>();
 
-    when(skillJpaRepository.findAllIdBySkillNames(anyList())).thenReturn(List.of());
+    when(postSkillJpaRepository.findPostIdsBySkillIds(anyList())).thenReturn(allPostIdBySkill);
 
-    assertThatThrownBy(() -> getAllPostsOfSkillService.getPostsUsingSkill(skillName, pageable))
+    assertThatThrownBy(() -> getAllPostsOfSkillService.getPostsUsingSkill(hashTagIds, pageable))
         .isInstanceOf(SkillNotFoundException.class);
   }
 
   @Test
   void order_정렬기준이_case에_없으면_UnsupportSortException_예외가_발생한다() {
-    String skillName = "Java,Spring";
-    HashSet<Long> postIds = new HashSet<>(List.of(1L, 2L, 3L));
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "wrongOrder");
 
-    when(skillJpaRepository.findAllIdBySkillNames(anyList())).thenReturn(skillIds);
-    when(postSkillJpaRepository.findPostIdsBySkillIds(anyList())).thenReturn(postIds);
+    HashSet<Long> allPostIdBySkill = new HashSet<>(List.of(1L, 2L, 3L));
+    Pageable pageable = PageRequest.of(0, 3, Direction.DESC, "wrongOrder");
 
-    assertThatThrownBy(() -> getAllPostsOfSkillService.getPostsUsingSkill(skillName, pageable))
+    when(postSkillJpaRepository.findPostIdsBySkillIds(anyList())).thenReturn(allPostIdBySkill);
+
+    assertThatThrownBy(() -> getAllPostsOfSkillService.getPostsUsingSkill(hashTagIds, pageable))
         .isInstanceOf(UnsupportedSortException.class);
   }
 
@@ -152,9 +141,13 @@ class GetAllPostsOfSkillServiceTest {
     return List.of(
         new PostDto(1L, "title1", "content1", PostType.STUDY, PostMeeting.ONLINE,
             PostStatus.CREATED, 1L, "nickname", LocalDateTime.now()),
-        new PostDto(2L, "title2", "content2", PostType.STUDY, PostMeeting.OFFLINE,
+        new PostDto(2L, "title2", "content2", PostType.PROJECT, PostMeeting.OFFLINE,
             PostStatus.CREATED, 1L, "nickname", LocalDateTime.now()),
-        new PostDto(3L, "title3", "content3", PostType.STUDY, PostMeeting.OFFLINE,
+        new PostDto(3L, "title3", "content3", PostType.STUDY, PostMeeting.ON_OFFLINE,
+            PostStatus.CREATED, 1L, "nickname", LocalDateTime.now()),
+        new PostDto(4L, "title4", "content4", PostType.PROJECT, PostMeeting.ONLINE,
+            PostStatus.MODIFIED, 1L, "nickname", LocalDateTime.now()),
+        new PostDto(5L, "title5", "content5", PostType.STUDY, PostMeeting.OFFLINE,
             PostStatus.CREATED, 1L, "nickname", LocalDateTime.now())
 
     );

@@ -2,7 +2,7 @@ package com.project.socket.postskill.controller;
 
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -53,23 +53,23 @@ class GetAllPostsOfSkillControllerTest {
   @MockBean
   GetAllPostsOfSkillUseCase getAllPostsOfSkillUseCase;
 
-  final String hashTag = "Java,Spring";
+  final List<Long> hashTagIds = List.of(1L, 2L);
   final int page = 0;
   final int size = 5;
   final String order = "createdAt";
-
 
   @Test
   void 요청이_유효하면_해시태그_페이지_크기에_해당하는_게시물_조회와_200_응답을_한다() throws Exception {
     List<PostDto> postDtos = samplePostDtos();
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, order);
     Page<PostDto> postDtoPage = new PageImpl<>(postDtos, pageable, postDtos.size());
+    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
 
-    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(hashTag),
+    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(hashTagIds),
         any(Pageable.class))).thenReturn(postDtoPage);
 
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", hashTag)
+            .param("hashtag", TagIdToStringParam)
             .param("page", String.valueOf(page))
             .param("order", order))
         .andExpect(status().isOk())
@@ -78,7 +78,7 @@ class GetAllPostsOfSkillControllerTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 queryParameters(
-                    parameterWithName("hashtag").description("해시 태그"),
+                    parameterWithName("hashtag").description("해시태그 Id"),
                     parameterWithName("page").description("페이지 번호"),
                     parameterWithName("order").description("정렬 기준")
                 ),
@@ -128,7 +128,7 @@ class GetAllPostsOfSkillControllerTest {
   }
 
   @Test
-  void hashtag_값이_null_이면_200_응답을_한다() throws Exception {
+  void hashtagIds_값이_null_이면_200_응답을_한다() throws Exception {
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, order);
 
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(null), any(Pageable.class)))
@@ -142,10 +142,10 @@ class GetAllPostsOfSkillControllerTest {
 
 
   @Test
-  void hashtag_값이_빈값_이면_200_응답을_한다() throws Exception {
+  void hashtagIds_값이_빈_리스트면_200_응답을_한다() throws Exception {
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, order);
 
-    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(eq(""), any(Pageable.class)))
+    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class)))
         .thenReturn(new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size()));
 
     mockMvc.perform(get("/posts/projects")
@@ -158,7 +158,7 @@ class GetAllPostsOfSkillControllerTest {
   @Test
   void 페이징의_page_parameter가_0보다_작으면_400_응답을_한다() throws Exception {
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", hashTag)
+            .param("hashtag", String.valueOf(hashTagIds))
             .param("page", String.valueOf(-1))
             .param("order", "createdAt"))
         .andExpect(status().isBadRequest());
@@ -168,23 +168,24 @@ class GetAllPostsOfSkillControllerTest {
   @Test
   void 정렬조건인_order_가_null_일_경우_200_응답을_한다() throws Exception {
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, order);
+    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
 
-    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyString(), any(Pageable.class)))
+    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class)))
         .thenReturn(new PageImpl<>(samplePostDtos(), pageable, samplePostDtos().size()));
 
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", hashTag)
+            .param("hashtag", TagIdToStringParam)
             .param("page", String.valueOf(page)))
         .andExpect(status().isOk());
   }
 
   @Test
   void 정렬조건인_order_가_정렬기준에_없을경우_UnsupportedSortException_예외가_발생하며_404_응답을_한다() throws Exception {
-    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyString(), any(Pageable.class))).thenThrow(
+    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class))).thenThrow(
         new UnsupportedSortException());
 
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", hashTag)
+            .param("hashtag", String.valueOf(hashTagIds))
             .param("page", String.valueOf(page))
             .param("order", "wrongOrder"))
         .andExpect(status().isBadRequest());
@@ -192,12 +193,16 @@ class GetAllPostsOfSkillControllerTest {
 
 
   @Test
-  void skillName의_조회결과가_없어_SkillNotFoundException_예외가_발생하면_404_응답을_한다() throws Exception {
-    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyString(), any(Pageable.class))).thenThrow(
+  void 입력받은_hashTagIds와_연관된_게시물이_없을경우_SkillNotFoundException_예외가_발생하며_404_응답을_한다()
+      throws Exception {
+
+    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
+
+    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class))).thenThrow(
         new SkillNotFoundException());
 
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", hashTag)
+            .param("hashtag", TagIdToStringParam)
             .param("page", String.valueOf(page))
             .param("order", order))
         .andExpect(status().isNotFound());
