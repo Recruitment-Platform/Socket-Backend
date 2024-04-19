@@ -16,8 +16,6 @@ import com.project.socket.post.model.PostType;
 import com.project.socket.post.repository.PostJpaRepository;
 import com.project.socket.post.service.usecase.PostDto;
 import com.project.socket.postskill.repository.PostSkillJpaRepository;
-import com.project.socket.skill.exception.SkillNotFoundException;
-import com.project.socket.skill.repository.SkillJpaRepository;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import java.time.LocalDateTime;
@@ -48,9 +46,6 @@ class GetAllPostsOfSkillServiceTest {
   PostJpaRepository postJpaRepository;
 
   @Mock
-  SkillJpaRepository skillJpaRepository;
-
-  @Mock
   PostSkillJpaRepository postSkillJpaRepository;
 
   private final List<Long> hashTagIds = List.of(1L, 2L);
@@ -61,7 +56,7 @@ class GetAllPostsOfSkillServiceTest {
 
 
   @Test
-  void hashTagIds와_관련된_게시물이_있으면_성공적으로_조회한다() {
+  void hashTagIds와_연관있는_게시물이_있으면_해당_게시물을_조회한다() {
     // given
     HashSet<Long> allPostIdBySkill = new HashSet<>(List.of(1L, 2L, 3L));
 
@@ -80,10 +75,21 @@ class GetAllPostsOfSkillServiceTest {
         .getPostsByHashTag(allPostIdBySkill, pageable, orderSpecifier);
   }
 
+  @Test
+  void hashTagIds와_연관있는_게시물이_존재하지_않을경우_빈_페이지를_반환한다() {
+    HashSet<Long> allPostIdBySkill = new HashSet<>();
+
+    when(postSkillJpaRepository.findPostIdsBySkillIds(anyList())).thenReturn(allPostIdBySkill);
+
+    Page<PostDto> actualPosts = getAllPostsOfSkillService.getPostsUsingSkill(hashTagIds,
+        pageable);
+
+    assertThat(actualPosts).isEmpty();
+  }
 
   @Test
   void hashTagIds가_빈_문자열_일경우_모든_게시물을_페이징해서_조회한다() {
-    List<Long> hashTagIds = Collections.EMPTY_LIST;
+    List<Long> hashTagIds = Collections.emptyList();
     HashSet<Long> allPostIdBySkill = new HashSet<>();
 
     when(postJpaRepository.getPostsByHashTag(any(), any(Pageable.class), any()))
@@ -114,15 +120,6 @@ class GetAllPostsOfSkillServiceTest {
         orderSpecifier);
   }
 
-  @Test
-  void skillName_조회결과가_없으면_SkillNotFoundException_예외가_발생한다() {
-    HashSet<Long> allPostIdBySkill = new HashSet<>();
-
-    when(postSkillJpaRepository.findPostIdsBySkillIds(anyList())).thenReturn(allPostIdBySkill);
-
-    assertThatThrownBy(() -> getAllPostsOfSkillService.getPostsUsingSkill(hashTagIds, pageable))
-        .isInstanceOf(SkillNotFoundException.class);
-  }
 
   @Test
   void order_정렬기준이_case에_없으면_UnsupportSortException_예외가_발생한다() {

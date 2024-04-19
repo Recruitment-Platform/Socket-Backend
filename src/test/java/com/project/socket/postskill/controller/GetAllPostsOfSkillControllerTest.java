@@ -27,8 +27,8 @@ import com.project.socket.post.model.PostStatus;
 import com.project.socket.post.model.PostType;
 import com.project.socket.post.service.usecase.PostDto;
 import com.project.socket.postskill.service.usecase.GetAllPostsOfSkillUseCase;
-import com.project.socket.skill.exception.SkillNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,9 +156,26 @@ class GetAllPostsOfSkillControllerTest {
   }
 
   @Test
-  void 페이징의_page_parameter가_0보다_작으면_400_응답을_한다() throws Exception {
+  void 입력받은_hashTagIds와_연관된_게시물이_없을경우_200_응답을_한다() throws Exception {
+    Page<PostDto> emptyPage = new PageImpl<>(Collections.emptyList());
+    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
+
+    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class)))
+        .thenReturn(emptyPage);
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", String.valueOf(hashTagIds))
+            .param("hashtag", TagIdToStringParam)
+            .param("page", String.valueOf(page))
+            .param("order", order))
+        .andExpect(status().isOk());
+
+  }
+
+  @Test
+  void 페이징의_page_parameter가_0보다_작으면_400_응답을_한다() throws Exception {
+    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
+
+    mockMvc.perform(get("/posts/projects")
+            .param("hashtag", TagIdToStringParam)
             .param("page", String.valueOf(-1))
             .param("order", "createdAt"))
         .andExpect(status().isBadRequest());
@@ -181,32 +198,16 @@ class GetAllPostsOfSkillControllerTest {
 
   @Test
   void 정렬조건인_order_가_정렬기준에_없을경우_UnsupportedSortException_예외가_발생하며_404_응답을_한다() throws Exception {
+    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
+
     when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class))).thenThrow(
         new UnsupportedSortException());
 
     mockMvc.perform(get("/posts/projects")
-            .param("hashtag", String.valueOf(hashTagIds))
+            .param("hashtag", TagIdToStringParam)
             .param("page", String.valueOf(page))
             .param("order", "wrongOrder"))
         .andExpect(status().isBadRequest());
-  }
-
-
-  @Test
-  void 입력받은_hashTagIds와_연관된_게시물이_없을경우_SkillNotFoundException_예외가_발생하며_404_응답을_한다()
-      throws Exception {
-
-    String[] TagIdToStringParam = hashTagIds.stream().map(String::valueOf).toArray(String[]::new);
-
-    when(getAllPostsOfSkillUseCase.getPostsUsingSkill(anyList(), any(Pageable.class))).thenThrow(
-        new SkillNotFoundException());
-
-    mockMvc.perform(get("/posts/projects")
-            .param("hashtag", TagIdToStringParam)
-            .param("page", String.valueOf(page))
-            .param("order", order))
-        .andExpect(status().isNotFound());
-
   }
 
 
