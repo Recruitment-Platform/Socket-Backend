@@ -1,6 +1,7 @@
 package com.project.socket.post.controller.dto.response;
 
 import com.project.socket.post.service.usecase.PostDto;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -26,6 +27,13 @@ public record PagePostResponseDto(
   }
 
   public static PagePostResponseDto toResponse(Page<PostDto> postDtoPage) {
+    if (postDtoPage.isEmpty()) {
+      return new PagePostResponseDto(
+          Collections.emptyList(),
+          new PageMetaData(0, 0, 0, 0, 0, true, true, false, false, "", "")
+      );
+    }
+
     List<PostResponseDto> content = postDtoPage.getContent().stream()
         .map(PostResponseDto::toResponse).toList();
 

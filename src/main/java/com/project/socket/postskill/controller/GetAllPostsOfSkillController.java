@@ -38,7 +38,7 @@ public class GetAllPostsOfSkillController {
         getAllPostsOfSkillUseCase.getPostsUsingSkill(hashtagIds, pageable);
 
     PagePostResponseDto responseDto = PagePostResponseDto.toResponse(postsUsingSkill);
-
+    
     return ResponseEntity.ok(responseDto);
   }
 }

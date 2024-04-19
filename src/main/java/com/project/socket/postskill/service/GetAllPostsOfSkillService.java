@@ -7,7 +7,6 @@ import com.project.socket.post.repository.PostJpaRepository;
 import com.project.socket.post.service.usecase.PostDto;
 import com.project.socket.postskill.repository.PostSkillJpaRepository;
 import com.project.socket.postskill.service.usecase.GetAllPostsOfSkillUseCase;
-import com.project.socket.skill.exception.SkillNotFoundException;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import java.time.LocalDateTime;
@@ -37,8 +36,8 @@ public class GetAllPostsOfSkillService implements GetAllPostsOfSkillUseCase {
       allPostIdBySkill = postSkillJpaRepository.findPostIdsBySkillIds(skillIdList);
 
       if (allPostIdBySkill.isEmpty()) {
-        // 입력받은 해시태그ID와 맵핑된 게시물이 하나도 없을 경우
-        throw new SkillNotFoundException();
+        // 입력받은 해시태그ID와 맵핑된 게시물이 하나도 없을 경우 빈 페이지 반환
+        return Page.empty();
       }
     }
     OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageable);
