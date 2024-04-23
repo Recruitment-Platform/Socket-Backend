@@ -24,10 +24,15 @@ include::signup.adoc[]
 
 include::comment.adoc[]
 
-[[postAPI]]
+[[POST-API]]
 == Post API
 
 include::post.adoc[]
+
+[[POSTSKILL-API]]
+== PostSkill API
+
+include::postskill.adoc[]
 
 [[CHATROOM-API]]
 == Chat Room API

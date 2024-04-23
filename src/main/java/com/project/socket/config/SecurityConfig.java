@@ -59,6 +59,8 @@ public class SecurityConfig {
             .requestMatchers("/docs/**", "/actuator/**", "/error/**", "/").permitAll()
             .requestMatchers("/ws/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/posts/{postId}/comments").permitAll()
+            .requestMatchers(HttpMethod.GET, "/posts/{postId}").permitAll()
+            .requestMatchers(HttpMethod.GET, "/posts/projects").permitAll()
             .requestMatchers("/signup").authenticated()
             .requestMatchers(HttpMethod.POST, "/posts/{postId}/chat-rooms")
             .hasAuthority(Role.ROLE_USER.name())
@@ -74,9 +76,9 @@ public class SecurityConfig {
   private List<String> corsOrigins;
 
   @Bean
-  public WebSecurityCustomizer webSecurityCustomizer(){
+  public WebSecurityCustomizer webSecurityCustomizer() {
     return web -> web.ignoring()
-                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
   }
 
   @Bean
